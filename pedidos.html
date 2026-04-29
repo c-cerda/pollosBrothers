@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Pedidos - Pollos</title>
+	<link rel="stylesheet" href="styles/style.css">
+</head>
+
+<body>
+
+	<header class="topbar">
+		<div class="logo">🐔 Pollos El Diferente</div>
+		<div class="user">Administrador ⌄</div>
+	</header>
+
+	<div class="container">
+
+		<aside class="sidebar">
+			<h3>Menú</h3>
+			<ul>
+				<li>Dashboard</li>
+				<li class="active">Pedidos</li>
+				<li>Ventas</li>
+				<li>Inventario</li>
+				<li class="config">Configuración</li>
+				<li class="logout">Cerrar Sesión</li>
+			</ul>
+		</aside>
+
+		<main class="content">
+			<h2>Gestión de Pedidos</h2>
+
+			<!-- ACTION BAR -->
+			<div class="inventory-actions">
+				<input type="text" placeholder="Buscar pedido o cliente...">
+				<button class="btn add">+ Nuevo Pedido</button>
+			</div>
+
+			<!-- SUMMARY CARDS -->
+			<div class="cards">
+				<div class="card red">
+					<p>Pedidos Pendientes</p>
+					<h3>8</h3>
+				</div>
+				<div class="card orange">
+					<p>En Proceso</p>
+					<h3>6</h3>
+				</div>
+				<div class="card blue">
+					<p>Entregados Hoy</p>
+					<h3>15</h3>
+				</div>
+				<div class="card yellow">
+					<p>Total del Día</p>
+					<h3>24</h3>
+				</div>
+			</div>
+
+			<!-- ORDERS TABLE -->
+			<div class="table">
+				<h3>Lista de Pedidos</h3>
+				<table>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Cliente</th>
+							<th>Productos</th>
+							<th>Total</th>
+							<th>Hora</th>
+							<th>Estado</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>#001</td>
+							<td>Juan Pérez</td>
+							<td>2x Pechuga, 1x Refresco</td>
+							<td>$320</td>
+							<td>12:45 PM</td>
+							<td><span class="status pending">Pendiente</span></td>
+							<td>
+								<button class="btn small">Ver</button>
+								<button class="btn small">Editar</button>
+							</td>
+						</tr>
+						<tr>
+							<td>#002</td>
+							<td>María González</td>
+							<td>3x Alitas</td>
+							<td>$450</td>
+							<td>12:30 PM</td>
+							<td><span class="status done">Entregado</span></td>
+							<td>
+								<button class="btn small">Ver</button>
+							</td>
+						</tr>
+						<tr>
+							<td>#003</td>
+							<td>Carlos Ramírez</td>
+							<td>1x Combo Familiar</td>
+							<td>$640</td>
+							<td>12:10 PM</td>
+							<td><span class="status warning">En proceso</span></td>
+							<td>
+								<button class="btn small">Ver</button>
+								<button class="btn small">Editar</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+		</main>
+	</div>
+
+</body>
+
+</html>

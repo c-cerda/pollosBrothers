@@ -1,0 +1,572 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: Arial, sans-serif;
+}
+
+body {
+	background: #f5f5f5;
+}
+
+/* TOPBAR */
+.topbar {
+	background: #ff2d2d;
+	color: white;
+	display: flex;
+	justify-content: space-between;
+	padding: 15px 30px;
+	align-items: center;
+}
+
+.topbar nav a {
+	margin: 0 10px;
+	color: white;
+	text-decoration: none;
+	opacity: 0.8;
+}
+
+.topbar nav a.active {
+	border-bottom: 2px solid white;
+	opacity: 1;
+}
+
+/* LAYOUT */
+.container {
+	display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+	width: 220px;
+	background: #fff;
+	padding: 20px;
+	height: calc(100vh - 60px);
+}
+
+.sidebar ul {
+	list-style: none;
+}
+
+.sidebar li {
+	padding: 12px;
+	margin: 8px 0;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+.sidebar li.active {
+	background: #ff3c3c;
+	color: white;
+}
+
+.sidebar .config {
+	background: #ffd966;
+}
+
+.sidebar .logout {
+	background: #2b6cb0;
+	color: white;
+}
+
+/* CONTENT */
+.content {
+	flex: 1;
+	padding: 20px;
+}
+
+/* CARDS */
+.cards {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 15px;
+	margin: 20px 0;
+}
+
+.card {
+	padding: 20px;
+	border-radius: 12px;
+	color: white;
+}
+
+.card h3 {
+	font-size: 24px;
+	margin-top: 10px;
+}
+
+.red {
+	background: #ff3c3c;
+}
+
+.orange {
+	background: #ff6a00;
+}
+
+.yellow {
+	background: #ffa500;
+}
+
+.blue {
+	background: #2b6cb0;
+}
+
+/* GRID SECTION */
+.grid {
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: 20px;
+}
+
+/* TABLE */
+.table {
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+}
+
+table {
+	width: 100%;
+	margin-top: 10px;
+	border-collapse: collapse;
+}
+
+th,
+td {
+	padding: 10px;
+	text-align: left;
+}
+
+.status {
+	padding: 5px 10px;
+	border-radius: 8px;
+	font-size: 12px;
+}
+
+.pending {
+	background: #ff4d4d;
+	color: white;
+}
+
+.done {
+	background: #28a745;
+	color: white;
+}
+
+/* CHART */
+.chart {
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+}
+
+.fake-chart {
+	height: 200px;
+	background: #ffa500;
+	border-radius: 10px;
+	margin-top: 10px;
+}
+
+/* ACTION BAR */
+.inventory-actions {
+	display: flex;
+	justify-content: space-between;
+	margin: 20px 0;
+}
+
+.inventory-actions input {
+	padding: 10px;
+	width: 250px;
+	border-radius: 8px;
+	border: 1px solid #ccc;
+}
+
+/* BUTTONS */
+.btn {
+	background: #ff6a00;
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+.btn:hover {
+	opacity: 0.9;
+}
+
+.btn.small {
+	padding: 6px 10px;
+	font-size: 12px;
+}
+
+.btn.add {
+	background: #ff3c3c;
+}
+
+/* STATUS VARIANTS */
+.status.warning {
+	background: #ffa500;
+	color: white;
+}
+
+.status.warning {
+	background: #ffa500;
+	color: white;
+}
+
+/* TOP PRODUCTS LIST */
+.top-products {
+	list-style: none;
+	margin-top: 10px;
+}
+
+.top-products li {
+	display: flex;
+	justify-content: space-between;
+	padding: 8px 0;
+	border-bottom: 1px solid #eee;
+}
+
+.top-products span {
+	font-weight: bold;
+}
+
+.login-body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background: #134E8E;
+}
+
+.login-box {
+	background: white;
+	padding: 30px;
+	border-radius: 12px;
+	text-align: center;
+	width: 300px;
+}
+
+.login-box input {
+	width: 100%;
+	padding: 12px;
+	margin: 15px 0;
+	border-radius: 8px;
+	border: 1px solid #ccc;
+}
+
+.error {
+	color: red;
+	font-size: 14px;
+}
+
+/* KITCHEN MODE */
+.kitchen-body {
+	background: #111;
+	color: white;
+	font-family: Arial, sans-serif;
+}
+
+.kitchen-container {
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	height: 100vh;
+	gap: 10px;
+	padding: 10px;
+}
+
+/* CURRENT ORDER */
+.current-order {
+	background: #1a1a1a;
+	padding: 20px;
+	border-radius: 12px;
+}
+
+.current-order h1 {
+	font-size: 32px;
+	margin-bottom: 15px;
+}
+
+.order-card {
+	background: #222;
+	padding: 20px;
+	border-radius: 12px;
+	margin-bottom: 10px;
+}
+
+.order-card.active {
+	border: 3px solid #ff3c3c;
+}
+
+/* HEADER */
+.order-header {
+	display: flex;
+	justify-content: space-between;
+	font-size: 22px;
+	margin-bottom: 10px;
+}
+
+.order-id {
+	font-weight: bold;
+}
+
+/* ITEMS */
+.order-items p {
+	font-size: 24px;
+	margin: 8px 0;
+}
+
+/* NOTES */
+.order-notes {
+	margin-top: 15px;
+	padding: 10px;
+	background: #ff3c3c;
+	color: white;
+	border-radius: 8px;
+	font-size: 18px;
+}
+
+/* BUTTON BIG */
+.btn.big {
+	width: 100%;
+	margin-top: 20px;
+	padding: 15px;
+	font-size: 18px;
+}
+
+/* NEXT ORDERS */
+.next-orders {
+	background: #1a1a1a;
+	padding: 15px;
+	border-radius: 12px;
+	overflow-y: auto;
+}
+
+.next-orders h2 {
+	margin-bottom: 10px;
+}
+
+.next-orders .order-card {
+	font-size: 16px;
+}
+
+/* =========================
+    CAJA UI UPGRADE
+========================= */
+
+/* Layout refinement */
+.caja-layout {
+	display: grid;
+	grid-template-columns: 2.2fr 1fr;
+	gap: 20px;
+}
+
+/* PRODUCT PANEL */
+.productos {
+	background: linear-gradient(145deg, #ffffff, #f0f0f0);
+	padding: 20px;
+	border-radius: 16px;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* SEARCH */
+.productos input {
+	width: 100%;
+	padding: 12px;
+	margin: 15px 0;
+	border-radius: 10px;
+	border: none;
+	background: #f3f3f3;
+	outline: none;
+}
+
+/* PRODUCT GRID */
+.product-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 15px;
+}
+
+/* PRODUCT CARD */
+.product-card {
+	background: white;
+	border-radius: 16px;
+	padding: 15px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+	transition: all 0.15s ease;
+}
+
+.product-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.product-info h4 {
+	font-size: 16px;
+}
+
+.product-info p {
+	font-weight: bold;
+	color: #ff3c3c;
+}
+
+/* ADD BUTTON */
+.add-btn {
+	background: #ff3c3c;
+	border-radius: 50%;
+	width: 35px;
+	height: 35px;
+	font-size: 18px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* =========================
+   🧾 TICKET PANEL
+========================= */
+
+.ticket {
+	background: #ffffff;
+	border-radius: 16px;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* ITEMS */
+.ticket-items {
+	flex: 1;
+	margin: 15px 0;
+}
+
+.item {
+	display: grid;
+	grid-template-columns: 1fr auto auto;
+	gap: 10px;
+	align-items: center;
+
+	padding: 10px;
+	border-radius: 10px;
+	margin-bottom: 8px;
+
+	background: #fafafa;
+	transition: 0.2s;
+}
+
+.item:hover {
+	background: #f0f0f0;
+}
+
+.remove {
+	background: none;
+	border: none;
+	color: #ff3c3c;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+/* TOTAL */
+.total {
+	background: #111;
+	color: white;
+	padding: 15px;
+	border-radius: 12px;
+	text-align: center;
+	margin-top: 10px;
+}
+
+.total h3 {
+	font-size: 22px;
+}
+
+/* PAYMENT BUTTONS */
+.payment {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+	margin-top: 15px;
+}
+
+.payment .btn {
+	padding: 12px;
+	font-weight: bold;
+}
+
+/* MAIN ACTION */
+.payment .add {
+	grid-column: span 2;
+	font-size: 18px;
+	background: #ff3c3c;
+	box-shadow: 0 5px 15px rgba(255, 60, 60, 0.4);
+}
+
+/* PRESS EFFECT */
+.btn:active {
+	transform: scale(0.97);
+}
+
+/* TABLET LOGIN */
+.login-box.tablet {
+	width: 320px;
+}
+
+/* DISPLAY */
+.display {
+	background: #111;
+	color: #FFB33F;
+	font-size: 28px;
+	padding: 15px;
+	border-radius: 10px;
+	margin: 15px 0;
+	letter-spacing: 5px;
+	text-align: center;
+}
+
+/* KEYPAD GRID */
+.keypad {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 10px;
+}
+
+/* KEYS */
+.keypad button {
+	padding: 18px;
+	font-size: 20px;
+	border: none;
+	border-radius: 10px;
+	background: #f0f0f0;
+	cursor: pointer;
+	transition: 0.1s;
+}
+
+.keypad button:active {
+	transform: scale(0.95);
+	background: #ddd;
+}
+
+/* SPECIAL KEYS */
+.keypad .clear {
+	background: #ff6a00;
+	color: white;
+}
+
+.keypad .back {
+	background: #2b6cb0;
+	color: white;
+}
+
+/* BIG BUTTON */
+.btn.big {
+	width: 100%;
+	margin-top: 15px;
+	padding: 15px;
+	font-size: 18px;
+}

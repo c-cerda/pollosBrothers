@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Caja - Pollos</title>
+	<link rel="stylesheet" href="styles/style.css">
+</head>
+
+<body>
+
+	<header class="topbar">
+		<div class="logo">🐔 Pollos El Diferente</div>
+		<div class="user">Administrador ⌄</div>
+	</header>
+
+	<div class="container">
+
+		<!-- SIDEBAR -->
+		<aside class="sidebar">
+			<h3>Menú</h3>
+			<ul>
+				<li>Dashboard</li>
+				<li>Pedidos</li>
+				<li>Ventas</li>
+				<li>Inventario</li>
+				<li class="active">Caja</li>
+				<li class="config">Configuración</li>
+				<li class="logout">Cerrar Sesión</li>
+			</ul>
+		</aside>
+
+		<!-- MAIN -->
+		<main class="content caja-layout">
+
+			<!-- LEFT: PRODUCTS -->
+			<div class="productos">
+				<h2>Seleccionar Productos</h2>
+
+				<input type="text" placeholder="Buscar producto...">
+
+				<div class="product-grid">
+					<div class="product-card">
+						<div class="product-info">
+							<h4>Pechuga</h4>
+							<p>$120</p>
+						</div>
+						<button class="btn add-btn">+</button>
+					</div>
+
+					<div class="product-card">
+						<div class="product-info">
+							<h4>Pechuga</h4>
+							<p>$120</p>
+						</div>
+						<button class="btn add-btn">+</button>
+					</div>
+
+					<div class="product-card">
+						<div class="product-info">
+							<h4>Pechuga</h4>
+							<p>$120</p>
+						</div>
+						<button class="btn add-btn">+</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- RIGHT: CART -->
+			<div class="ticket">
+				<h2>Ticket</h2>
+
+				<div class="ticket-items">
+					<div class="item">
+						<span>Pechuga x2</span>
+						<span>$240</span>
+						<button class="remove">✕</button>
+					</div>
+
+					<div class="item">
+						<span>Pechuga x2</span>
+						<span>$240</span>
+						<button class="remove">✕</button>
+					</div>
+				</div>
+
+				<div class="total">
+					<h3>Total: $265</h3>
+				</div>
+
+				<div class="payment">
+					<button class="btn">Efectivo</button>
+					<button class="btn">Tarjeta</button>
+					<button class="btn add">Cobrar</button>
+				</div>
+
+			</div>
+
+		</main>
+	</div>
+
+</body>
+
+</html>
