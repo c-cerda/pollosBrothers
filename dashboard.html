@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Dashboard - Pollos</title>
+	<link rel="stylesheet" href="styles/style.css">
+</head>
+
+<body>
+
+	<header class="topbar">
+		<div class="logo">🐔 Pollos El Diferente</div>
+		<div class="user">Administrador </div>
+	</header>
+
+	<div class="container">
+
+		<aside class="sidebar">
+			<h3>Menú</h3>
+			<ul>
+				<li >Dashboard</a></li>
+				<li class="active"><a href="pedidos.html">Pedidos</a></li>
+				<li class="active"><a href="ventas.html">Ventas</a></li>
+				<li class="active"><a href="inventario.html">Inventario</a></li>
+		        <li class="active"><a href="caja.html">Caja</a></li>
+
+				<li class="config"><a href="#">Configuración</a></li>
+				<li class="logout"><a href="#">Cerrar Sesión</a></li>
+			</ul>
+		</aside>
+
+		<main class="content">
+			<h2>¡Bienvenido, Administrador!</h2>
+
+			<div class="cards">
+				<div class="card red">
+					<p>Pedidos Pendientes</p>
+					<h3>8</h3>
+				</div>
+				<div class="card orange">
+					<p>Órdenes del Día</p>
+					<h3>24</h3>
+				</div>
+				<div class="card yellow">
+					<p>Ingresos del Día</p>
+					<h3>$1,850.00</h3>
+				</div>
+				<div class="card blue">
+					<p>Inventario Bajo</p>
+					<h3>2</h3>
+				</div>
+			</div>
+
+			<div class="grid">
+				<div class="table">
+					<h3>Pedidos Recientes</h3>
+					<table>
+						<thead>
+							<tr>
+								<th>Cliente</th>
+								<th>Estado</th>
+								<th>Total</th>
+								<th>Hora</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Juan Pérez</td>
+								<td><span class="status pending">Pendiente</span></td>
+								<td>$320</td>
+								<td>12:45 PM</td>
+							</tr>
+							<tr>
+								<td>María González</td>
+								<td><span class="status done">Entregado</span></td>
+								<td>$450</td>
+								<td>12:30 PM</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="chart">
+					<h3>Ventas de la Semana</h3>
+					<div class="fake-chart"></div>
+				</div>
+			</div>
+
+		</main>
+	</div>
+
+</body>
+
+</html>
