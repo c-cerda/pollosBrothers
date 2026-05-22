@@ -2,4 +2,4 @@
 session_start();
 $_SESSION = array();
 session_destroy();
-header("Location: /pbros/html/index.html");
+header("Location: /pollosBrothers/html/index.html");

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/util/conec.php';
+require_once __DIR__ . '/conec.php';
 
 class Empleado
 {
