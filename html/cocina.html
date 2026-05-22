@@ -16,7 +16,7 @@
 		<a class="kitchen-logout" href="../api/util/logout.php">Salir</a>
 	</header>
 
-	<main id="pedidos" class="pedidos-list" hx-get="../api/ventas/list.php" hx-trigger="load, every 5s"
+	<main id="pedidos" class="pedidos-list" hx-get="../api/ventas/pendientes.php" hx-trigger="load, every 5s"
 		hx-swap="innerHTML">
 		<p class="pedidos-empty">Cargando...</p>
 	</main>
