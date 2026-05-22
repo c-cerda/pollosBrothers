@@ -9,467 +9,736 @@
 
 	<style>
 		/* ---- estilos inline ya existentes (conservados) ---- */
-		body { margin:0; font-family:Arial,sans-serif; background:#f5f5f5; }
-		.topbar { background:#d62828; color:white; padding:15px 25px; display:flex; justify-content:space-between; align-items:center; }
-		.container { display:flex; min-height:100vh; }
-		.sidebar { width:220px; background:#222; color:white; padding:20px; }
-		.sidebar ul { list-style:none; padding:0; }
-		.sidebar li { padding:12px; margin-bottom:5px; border-radius:6px; cursor:pointer; }
-		.sidebar li.active { background:#d62828; }
-		.content { flex:1; padding:25px; }
-		.inventory-actions { display:flex; justify-content:space-between; margin-bottom:20px; gap:10px; }
-		.inventory-actions input { width:300px; padding:10px; }
-		.cards { display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-bottom:25px; }
-		.card { padding:20px; border-radius:10px; color:white; }
-		.red { background:#d62828; } .orange { background:#f77f00; } .blue { background:#003049; }
-		.yellow { background:#fcbf49; color:black; }
-		.table { background:white; padding:20px; border-radius:10px; }
-		table { width:100%; border-collapse:collapse; }
-		th, td { padding:12px; border-bottom:1px solid #ddd; text-align:left; }
-		.status { padding:5px 10px; border-radius:20px; font-size:12px; color:white; }
-		.pending { background:#d62828; } .done { background:green; } .warning { background:orange; }
-		.in-process { background:#f77f00; } .ready { background:#0077b6; } .cancelled { background:#555; }
-		.btn { padding:8px 14px; border:none; border-radius:6px; cursor:pointer; }
-		.btn.add { background:#d62828; color:white; }
-		.btn.small { padding:5px 10px; background:#003049; color:white; font-size:12px; }
-		.btn:disabled { opacity:.5; cursor:not-allowed; }
-		.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.5); justify-content:center; align-items:center; z-index:1000; }
-		.modal-content { background:white; padding:25px; border-radius:10px; width:440px; max-height:90vh; overflow-y:auto; }
-		.modal-content input, .modal-content select { width:100%; padding:10px; margin-bottom:15px; box-sizing:border-box; border:1px solid #ddd; border-radius:6px; }
-		.modal-footer { display:flex; gap:10px; }
-		.modal-footer .btn { flex:1; }
-		.toast { position:fixed; bottom:20px; right:20px; padding:12px 20px; border-radius:8px; color:white; font-size:14px; z-index:9999; display:none; }
-		.toast.success { background:#2d6a4f; } .toast.error { background:#d62828; }
-		.filter-row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-		.filter-row select { padding:9px; border:1px solid #ddd; border-radius:6px; }
-		.spinner { display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,.4); border-top-color:white; border-radius:50%; animation:spin .6s linear infinite; vertical-align:middle; margin-right:6px; }
-		@keyframes spin { to { transform:rotate(360deg); } }
+		body {
+			margin: 0;
+			font-family: Arial, sans-serif;
+			background: #f5f5f5;
+		}
+
+		.topbar {
+			background: #d62828;
+			color: white;
+			padding: 15px 25px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.container {
+			display: flex;
+			min-height: 100vh;
+		}
+
+		.sidebar {
+			width: 220px;
+			background: #222;
+			color: white;
+			padding: 20px;
+		}
+
+		.sidebar ul {
+			list-style: none;
+			padding: 0;
+		}
+
+		.sidebar li {
+			padding: 12px;
+			margin-bottom: 5px;
+			border-radius: 6px;
+			cursor: pointer;
+		}
+
+		.sidebar li.active {
+			background: #d62828;
+		}
+
+		.content {
+			flex: 1;
+			padding: 25px;
+		}
+
+		.inventory-actions {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 20px;
+			gap: 10px;
+		}
+
+		.inventory-actions input {
+			width: 300px;
+			padding: 10px;
+		}
+
+		.cards {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 15px;
+			margin-bottom: 25px;
+		}
+
+		.card {
+			padding: 20px;
+			border-radius: 10px;
+			color: white;
+		}
+
+		.red {
+			background: #d62828;
+		}
+
+		.orange {
+			background: #f77f00;
+		}
+
+		.blue {
+			background: #003049;
+		}
+
+		.yellow {
+			background: #fcbf49;
+			color: black;
+		}
+
+		.table {
+			background: white;
+			padding: 20px;
+			border-radius: 10px;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			padding: 12px;
+			border-bottom: 1px solid #ddd;
+			text-align: left;
+		}
+
+		.status {
+			padding: 5px 10px;
+			border-radius: 20px;
+			font-size: 12px;
+			color: white;
+		}
+
+		.pending {
+			background: #d62828;
+		}
+
+		.done {
+			background: green;
+		}
+
+		.warning {
+			background: orange;
+		}
+
+		.in-process {
+			background: #f77f00;
+		}
+
+		.ready {
+			background: #0077b6;
+		}
+
+		.cancelled {
+			background: #555;
+		}
+
+		.btn {
+			padding: 8px 14px;
+			border: none;
+			border-radius: 6px;
+			cursor: pointer;
+		}
+
+		.btn.add {
+			background: #d62828;
+			color: white;
+		}
+
+		.btn.small {
+			padding: 5px 10px;
+			background: #003049;
+			color: white;
+			font-size: 12px;
+		}
+
+		.btn:disabled {
+			opacity: .5;
+			cursor: not-allowed;
+		}
+
+		.modal {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, .5);
+			justify-content: center;
+			align-items: center;
+			z-index: 1000;
+		}
+
+		.modal-content {
+			background: white;
+			padding: 25px;
+			border-radius: 10px;
+			width: 440px;
+			max-height: 90vh;
+			overflow-y: auto;
+		}
+
+		.modal-content input,
+		.modal-content select {
+			width: 100%;
+			padding: 10px;
+			margin-bottom: 15px;
+			box-sizing: border-box;
+			border: 1px solid #ddd;
+			border-radius: 6px;
+		}
+
+		.modal-footer {
+			display: flex;
+			gap: 10px;
+		}
+
+		.modal-footer .btn {
+			flex: 1;
+		}
+
+		.toast {
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			padding: 12px 20px;
+			border-radius: 8px;
+			color: white;
+			font-size: 14px;
+			z-index: 9999;
+			display: none;
+		}
+
+		.toast.success {
+			background: #2d6a4f;
+		}
+
+		.toast.error {
+			background: #d62828;
+		}
+
+		.filter-row {
+			display: flex;
+			gap: 10px;
+			align-items: center;
+			flex-wrap: wrap;
+		}
+
+		.filter-row select {
+			padding: 9px;
+			border: 1px solid #ddd;
+			border-radius: 6px;
+		}
+
+		.spinner {
+			display: inline-block;
+			width: 14px;
+			height: 14px;
+			border: 2px solid rgba(255, 255, 255, .4);
+			border-top-color: white;
+			border-radius: 50%;
+			animation: spin .6s linear infinite;
+			vertical-align: middle;
+			margin-right: 6px;
+		}
+
+		@keyframes spin {
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
 		/* Tabla paginación */
-		.pagination { display:flex; gap:6px; justify-content:flex-end; margin-top:12px; }
-		.pagination button { padding:6px 12px; border:1px solid #ddd; background:white; border-radius:6px; cursor:pointer; }
-		.pagination button.active { background:#d62828; color:white; border-color:#d62828; }
+		.pagination {
+			display: flex;
+			gap: 6px;
+			justify-content: flex-end;
+			margin-top: 12px;
+		}
+
+		.pagination button {
+			padding: 6px 12px;
+			border: 1px solid #ddd;
+			background: white;
+			border-radius: 6px;
+			cursor: pointer;
+		}
+
+		.pagination button.active {
+			background: #d62828;
+			color: white;
+			border-color: #d62828;
+		}
+
 		/* Detalle items en tabla */
-		.items-badge { font-size:11px; color:#666; display:block; }
+		.items-badge {
+			font-size: 11px;
+			color: #666;
+			display: block;
+		}
 	</style>
 </head>
 
 <body>
 
-<header class="topbar">
-	<div class="logo">🐔 Pollos El Diferente</div>
-	<div class="user">Administrador ⌄</div>
-</header>
+	<header class="topbar">
+		<div class="logo">🐔 Pollos El Diferente</div>
+		<div class="user">Administrador ⌄</div>
+	</header>
 
-<div class="container">
+	<div class="container">
 
-	<aside class="sidebar">
-		<h3>Menú</h3>
-		<ul>
-			<li><a href="dashboard.html" style="color:white;text-decoration:none">Dashboard</a></li>
-			<li class="active">Pedidos</li>
-			<li><a href="ventas.html" style="color:white;text-decoration:none">Ventas</a></li>
-			<li><a href="inventario.html" style="color:white;text-decoration:none">Inventario</a></li>
-			<li class="config"><a href="config.html" style="color:white;text-decoration:none">Configuración</a></li>
-			<li class="logout"><a href="../api/util/logout.php" style="color:white;text-decoration:none">Cerrar Sesión</a></li>
-		</ul>
-	</aside>
+		<aside class="sidebar">
+			<h3>Menú</h3>
+			<ul>
+				<li><a href="dashboard.html" style="color:white;text-decoration:none">Dashboard</a></li>
+				<li class="active">Pedidos</li>
+				<li><a href="inventario.html" style="color:white;text-decoration:none">Inventario</a>
+				</li>
+				<li class="logout"><a href="../api/util/logout.php"
+						style="color:white;text-decoration:none">Cerrar Sesión</a></li>
+			</ul>
+		</aside>
 
-	<main class="content">
-		<h2>Gestión de Pedidos</h2>
+		<main class="content">
+			<h2>Gestión de Pedidos</h2>
 
-		<!-- ACTION BAR -->
-		<div class="inventory-actions">
-			<div class="filter-row">
-				<input type="text" id="buscar" placeholder="Buscar cliente o ID...">
-				<select id="filtroEstado">
-					<option value="">Todos los estados</option>
-					<option value="pendiente">Pendiente</option>
-					<option value="en_proceso">En proceso</option>
-					<option value="listo">Listo</option>
-					<option value="entregado">Entregado</option>
-					<option value="cancelado">Cancelado</option>
-				</select>
-				<input type="date" id="filtroFecha" title="Filtrar por fecha">
-				<button class="btn" id="btnRefresh" onclick="cargarPedidos()">↺ Actualizar</button>
+			<!-- ACTION BAR -->
+			<div class="inventory-actions">
+				<div class="filter-row">
+					<input type="text" id="buscar" placeholder="Buscar cliente o ID...">
+					<select id="filtroEstado">
+						<option value="">Todos los estados</option>
+						<option value="pendiente">Pendiente</option>
+						<option value="en_proceso">En proceso</option>
+						<option value="listo">Listo</option>
+						<option value="entregado">Entregado</option>
+						<option value="cancelado">Cancelado</option>
+					</select>
+					<input type="date" id="filtroFecha" title="Filtrar por fecha">
+					<button class="btn" id="btnRefresh" onclick="cargarPedidos()">↺
+						Actualizar</button>
+				</div>
+				<button class="btn add" onclick="abrirModal()">+ Nuevo Pedido</button>
 			</div>
-			<button class="btn add" onclick="abrirModal()">+ Nuevo Pedido</button>
-		</div>
 
-		<!-- SUMMARY CARDS -->
-		<div class="cards">
-			<div class="card red"><p>Pendientes</p><h3 id="cPendiente">—</h3></div>
-			<div class="card orange"><p>En Proceso</p><h3 id="cProceso">—</h3></div>
-			<div class="card blue"><p>Entregados Hoy</p><h3 id="cEntregado">—</h3></div>
-			<div class="card yellow"><p>Total del Día</p><h3 id="cTotal">—</h3></div>
-		</div>
+			<!-- SUMMARY CARDS -->
+			<div class="cards">
+				<div class="card red">
+					<p>Pendientes</p>
+					<h3 id="cPendiente">—</h3>
+				</div>
+				<div class="card orange">
+					<p>En Proceso</p>
+					<h3 id="cProceso">—</h3>
+				</div>
+				<div class="card blue">
+					<p>Entregados Hoy</p>
+					<h3 id="cEntregado">—</h3>
+				</div>
+				<div class="card yellow">
+					<p>Total del Día</p>
+					<h3 id="cTotal">—</h3>
+				</div>
+			</div>
 
-		<!-- TABLE -->
-		<div class="table">
-			<h3>Lista de Pedidos</h3>
-			<table>
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Cliente</th>
-						<th>Productos</th>
-						<th>Total</th>
-						<th>Pago</th>
-						<th>Hora</th>
-						<th>Estado</th>
-						<th>Acciones</th>
-					</tr>
-				</thead>
-				<tbody id="tablaPedidos">
-					<tr><td colspan="8" style="text-align:center;color:#999">Cargando pedidos...</td></tr>
-				</tbody>
-			</table>
-			<div class="pagination" id="paginacion"></div>
-		</div>
+			<!-- TABLE -->
+			<div class="table">
+				<h3>Lista de Pedidos</h3>
+				<table>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Cliente</th>
+							<th>Productos</th>
+							<th>Total</th>
+							<th>Pago</th>
+							<th>Hora</th>
+							<th>Estado</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					<tbody id="tablaPedidos">
+						<tr>
+							<td colspan="8" style="text-align:center;color:#999">Cargando
+								pedidos...</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="pagination" id="paginacion"></div>
+			</div>
 
-	</main>
-</div>
-
-<!-- MODAL NUEVO PEDIDO -->
-<div class="modal" id="modalPedido">
-	<div class="modal-content">
-		<h2>Nuevo Pedido</h2>
-		<input type="text" id="modalCliente" placeholder="Nombre del cliente (opcional)">
-
-		<label style="font-size:13px;font-weight:bold;margin-bottom:6px;display:block">Método de pago</label>
-		<select id="modalPago" style="margin-bottom:15px">
-			<option value="efectivo">Efectivo</option>
-			<option value="tarjeta">Tarjeta</option>
-			<option value="transferencia">Transferencia</option>
-		</select>
-
-		<label style="font-size:13px;font-weight:bold;margin-bottom:6px;display:block">Agregar productos</label>
-		<div style="display:flex;gap:8px;margin-bottom:10px">
-			<select id="modalProducto" style="flex:1;margin-bottom:0"></select>
-			<input type="number" id="modalCantidad" placeholder="Cant." min="1" value="1"
-				style="width:80px;margin-bottom:0">
-			<button class="btn add" type="button" onclick="agregarItemModal()">+</button>
-		</div>
-
-		<div id="modalItems" style="margin-bottom:15px;min-height:40px;border:1px solid #eee;border-radius:6px;padding:8px"></div>
-		<div style="text-align:right;font-weight:bold;margin-bottom:15px">Total: $<span id="modalTotal">0.00</span></div>
-
-		<div class="modal-footer">
-			<button class="btn add" id="btnGuardar" onclick="crearPedido()">Guardar Pedido</button>
-			<button class="btn" onclick="cerrarModal()">Cancelar</button>
-		</div>
-		<div id="modalError" style="color:#d62828;font-size:13px;margin-top:8px"></div>
+		</main>
 	</div>
-</div>
 
-<!-- MODAL CAMBIAR ESTADO -->
-<div class="modal" id="modalEstado">
-	<div class="modal-content" style="width:320px">
-		<h3>Cambiar estado del pedido <span id="estPedidoId"></span></h3>
-		<select id="nuevoEstado" style="width:100%;padding:10px;margin-bottom:15px;border:1px solid #ddd;border-radius:6px">
-			<option value="pendiente">Pendiente</option>
-			<option value="en_proceso">En proceso</option>
-			<option value="listo">Listo</option>
-			<option value="entregado">Entregado</option>
-			<option value="cancelado">Cancelado</option>
-		</select>
-		<div class="modal-footer">
-			<button class="btn add" onclick="confirmarEstado()">Confirmar</button>
-			<button class="btn" onclick="cerrarModalEstado()">Cancelar</button>
+	<!-- MODAL NUEVO PEDIDO -->
+	<div class="modal" id="modalPedido">
+		<div class="modal-content">
+			<h2>Nuevo Pedido</h2>
+			<input type="text" id="modalCliente" placeholder="Nombre del cliente (opcional)">
+
+			<label style="font-size:13px;font-weight:bold;margin-bottom:6px;display:block">Método de
+				pago</label>
+			<select id="modalPago" style="margin-bottom:15px">
+				<option value="efectivo">Efectivo</option>
+				<option value="tarjeta">Tarjeta</option>
+				<option value="transferencia">Transferencia</option>
+			</select>
+
+			<label style="font-size:13px;font-weight:bold;margin-bottom:6px;display:block">Agregar
+				productos</label>
+			<div style="display:flex;gap:8px;margin-bottom:10px">
+				<select id="modalProducto" style="flex:1;margin-bottom:0"></select>
+				<input type="number" id="modalCantidad" placeholder="Cant." min="1" value="1"
+					style="width:80px;margin-bottom:0">
+				<button class="btn add" type="button" onclick="agregarItemModal()">+</button>
+			</div>
+
+			<div id="modalItems"
+				style="margin-bottom:15px;min-height:40px;border:1px solid #eee;border-radius:6px;padding:8px">
+			</div>
+			<div style="text-align:right;font-weight:bold;margin-bottom:15px">Total: $<span
+					id="modalTotal">0.00</span></div>
+
+			<div class="modal-footer">
+				<button class="btn add" id="btnGuardar" onclick="crearPedido()">Guardar Pedido</button>
+				<button class="btn" onclick="cerrarModal()">Cancelar</button>
+			</div>
+			<div id="modalError" style="color:#d62828;font-size:13px;margin-top:8px"></div>
 		</div>
-		<div id="estadoError" style="color:#d62828;font-size:13px;margin-top:8px"></div>
 	</div>
-</div>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
+	<!-- MODAL CAMBIAR ESTADO -->
+	<div class="modal" id="modalEstado">
+		<div class="modal-content" style="width:320px">
+			<h3>Cambiar estado del pedido <span id="estPedidoId"></span></h3>
+			<select id="nuevoEstado"
+				style="width:100%;padding:10px;margin-bottom:15px;border:1px solid #ddd;border-radius:6px">
+				<option value="pendiente">Pendiente</option>
+				<option value="en_proceso">En proceso</option>
+				<option value="listo">Listo</option>
+				<option value="entregado">Entregado</option>
+				<option value="cancelado">Cancelado</option>
+			</select>
+			<div class="modal-footer">
+				<button class="btn add" onclick="confirmarEstado()">Confirmar</button>
+				<button class="btn" onclick="cerrarModalEstado()">Cancelar</button>
+			</div>
+			<div id="estadoError" style="color:#d62828;font-size:13px;margin-top:8px"></div>
+		</div>
+	</div>
 
-<script>
-// ─── Estado global ───────────────────────────────────────
-let productos = [];       // catálogo de productos
-let pedidosTodos = [];    // lista completa cargada del servidor
-let itemsModal = [];      // productos en el modal (nuevo pedido)
-let pedidoEstadoId = null;// id del pedido en el modal de estado
-const PER_PAGE = 15;
-let pagina = 1;
+	<!-- TOAST -->
+	<div class="toast" id="toast"></div>
 
-// ─── Utilidades ──────────────────────────────────────────
-const $ = id => document.getElementById(id);
-const money = n => (+n).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2});
+	<script>
+		// ─── Estado global ───────────────────────────────────────
+		let productos = [];       // catálogo de productos
+		let pedidosTodos = [];    // lista completa cargada del servidor
+		let itemsModal = [];      // productos en el modal (nuevo pedido)
+		let pedidoEstadoId = null;// id del pedido en el modal de estado
+		const PER_PAGE = 15;
+		let pagina = 1;
 
-function toast(msg, tipo = 'success') {
-	const el = $('toast');
-	el.textContent = msg;
-	el.className = `toast ${tipo}`;
-	el.style.display = 'block';
-	setTimeout(() => { el.style.display = 'none'; }, 3000);
-}
+		// ─── Utilidades ──────────────────────────────────────────
+		const $ = id => document.getElementById(id);
+		const money = n => (+n).toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
-// Mapas de estado → clase CSS y etiqueta
-const ESTADO_CSS = {
-	pendiente: 'pending', en_proceso: 'in-process',
-	listo: 'ready', entregado: 'done', cancelado: 'cancelled'
-};
-const ESTADO_LABEL = {
-	pendiente: 'Pendiente', en_proceso: 'En proceso',
-	listo: 'Listo', entregado: 'Entregado', cancelado: 'Cancelado'
-};
-
-// ─── Carga de catálogo ───────────────────────────────────
-async function cargarProductos() {
-	try {
-		const r = await fetch('../api/productos/list.php', { credentials: 'same-origin' });
-		if (r.status === 401) { window.location.href = 'index.html'; return; }
-		const d = await r.json();
-		if (!d.ok) { toast(d.error || 'Error al cargar productos', 'error'); return; }
-		productos = d.productos;
-
-		const sel = $('modalProducto');
-		sel.innerHTML = '<option value="">— Selecciona —</option>';
-		productos.forEach(p => {
-			sel.innerHTML += `<option value="${p.id}" data-precio="${p.precio}">${p.nombre} · $${money(p.precio)}</option>`;
-		});
-	} catch { toast('Error de red al cargar productos', 'error'); }
-}
-
-// ─── Carga de pedidos ────────────────────────────────────
-async function cargarPedidos() {
-	$('tablaPedidos').innerHTML = '<tr><td colspan="8" style="text-align:center;color:#999">Cargando…</td></tr>';
-
-	const fecha = $('filtroFecha').value;
-	const estado = $('filtroEstado').value;
-	let url = '../api/ventas/list.php?';
-	if (fecha)  url += `fecha=${fecha}&`;
-	if (estado) url += `estado=${estado}&`;
-
-	try {
-		const r = await fetch(url, { credentials: 'same-origin' });
-		if (r.status === 401) { window.location.href = 'index.html'; return; }
-		const d = await r.json();
-		if (!d.ok) {
-			$('tablaPedidos').innerHTML = `<tr><td colspan="8" style="text-align:center;color:#d62828">${d.error || 'Error'}</td></tr>`;
-			return;
+		function toast(msg, tipo = 'success') {
+			const el = $('toast');
+			el.textContent = msg;
+			el.className = `toast ${tipo}`;
+			el.style.display = 'block';
+			setTimeout(() => {el.style.display = 'none';}, 3000);
 		}
-		pedidosTodos = d.ventas ?? d.pedidos ?? [];
-		pagina = 1;
-		renderPedidos();
-		actualizarCards();
-	} catch {
-		$('tablaPedidos').innerHTML = '<tr><td colspan="8" style="text-align:center;color:#d62828">Error de red</td></tr>';
-	}
-}
 
-// ─── Renderizado ─────────────────────────────────────────
-function pedidosFiltrados() {
-	const q = $('buscar').value.toLowerCase();
-	return pedidosTodos.filter(p => {
-		const hayQ = !q ||
-			String(p.id).includes(q) ||
-			(p.cliente || '').toLowerCase().includes(q);
-		return hayQ;
-	});
-}
+		// Mapas de estado → clase CSS y etiqueta
+		const ESTADO_CSS = {
+			pendiente: 'pending', en_proceso: 'in-process',
+			listo: 'ready', entregado: 'done', cancelado: 'cancelled'
+		};
+		const ESTADO_LABEL = {
+			pendiente: 'Pendiente', en_proceso: 'En proceso',
+			listo: 'Listo', entregado: 'Entregado', cancelado: 'Cancelado'
+		};
 
-function renderPedidos() {
-	const lista = pedidosFiltrados();
-	const total = lista.length;
-	const pages = Math.ceil(total / PER_PAGE) || 1;
-	if (pagina > pages) pagina = pages;
+		// ─── Carga de catálogo ───────────────────────────────────
+		async function cargarProductos() {
+			try {
+				const r = await fetch('../api/productos/list.php', {credentials: 'same-origin'});
+				if (r.status === 401) {window.location.href = 'index.html'; return;}
+				const d = await r.json();
+				if (!d.ok) {toast(d.error || 'Error al cargar productos', 'error'); return;}
+				productos = d.productos;
 
-	const slice = lista.slice((pagina-1)*PER_PAGE, pagina*PER_PAGE);
+				const sel = $('modalProducto');
+				sel.innerHTML = '<option value="">— Selecciona —</option>';
+				productos.forEach(p => {
+					sel.innerHTML += `<option value="${p.id}" data-precio="${p.precio}">${p.nombre} · $${money(p.precio)}</option>`;
+				});
+			} catch {toast('Error de red al cargar productos', 'error');}
+		}
 
-	if (!slice.length) {
-		$('tablaPedidos').innerHTML = '<tr><td colspan="8" style="text-align:center;color:#999">Sin pedidos.</td></tr>';
-		$('paginacion').innerHTML = '';
-		return;
-	}
+		// ─── Carga de pedidos ────────────────────────────────────
+		async function cargarPedidos() {
+			$('tablaPedidos').innerHTML = '<tr><td colspan="8" style="text-align:center;color:#999">Cargando…</td></tr>';
 
-	$('tablaPedidos').innerHTML = slice.map(p => {
-		const cls = ESTADO_CSS[p.estado] ?? 'pending';
-		const lbl = ESTADO_LABEL[p.estado] ?? p.estado;
-		const hora = p.fecha ? new Date(p.fecha).toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'}) : '—';
-		// items puede venir como array desde la API
-		const itemsTxt = Array.isArray(p.items)
-			? p.items.map(i => `${i.cantidad}× ${i.nombre}`).join(', ')
-			: (p.producto || '—');
-		return `
+			const fecha = $('filtroFecha').value;
+			const estado = $('filtroEstado').value;
+			let url = '../api/ventas/list.php?';
+			if (fecha) url += `fecha=${fecha}&`;
+			if (estado) url += `estado=${estado}&`;
+
+			try {
+				const r = await fetch(url, {credentials: 'same-origin'});
+				if (r.status === 401) {window.location.href = 'index.html'; return;}
+				const d = await r.json();
+				if (!d.ok) {
+					$('tablaPedidos').innerHTML = `<tr><td colspan="8" style="text-align:center;color:#d62828">${d.error || 'Error'}</td></tr>`;
+					return;
+				}
+				pedidosTodos = d.ventas ?? d.pedidos ?? [];
+				pagina = 1;
+				renderPedidos();
+				actualizarCards();
+			} catch {
+				$('tablaPedidos').innerHTML = '<tr><td colspan="8" style="text-align:center;color:#d62828">Error de red</td></tr>';
+			}
+		}
+
+		// ─── Renderizado ─────────────────────────────────────────
+		function pedidosFiltrados() {
+			const q = $('buscar').value.toLowerCase();
+			return pedidosTodos.filter(p => {
+				const hayQ = !q ||
+					String(p.id).includes(q) ||
+					(p.cliente || '').toLowerCase().includes(q);
+				return hayQ;
+			});
+		}
+
+		function renderPedidos() {
+			const lista = pedidosFiltrados();
+			const total = lista.length;
+			const pages = Math.ceil(total / PER_PAGE) || 1;
+			if (pagina > pages) pagina = pages;
+
+			const slice = lista.slice((pagina - 1) * PER_PAGE, pagina * PER_PAGE);
+
+			if (!slice.length) {
+				$('tablaPedidos').innerHTML = '<tr><td colspan="8" style="text-align:center;color:#999">Sin pedidos.</td></tr>';
+				$('paginacion').innerHTML = '';
+				return;
+			}
+
+			$('tablaPedidos').innerHTML = slice.map(p => {
+				const cls = ESTADO_CSS[p.estado] ?? 'pending';
+				const lbl = ESTADO_LABEL[p.estado] ?? p.estado;
+				const hora = p.fecha ? new Date(p.fecha).toLocaleTimeString('es-MX', {hour: '2-digit', minute: '2-digit'}) : '—';
+				// items puede venir como array desde la API
+				const itemsTxt = Array.isArray(p.items)
+					? p.items.map(i => `${i.cantidad}× ${i.nombre}`).join(', ')
+					: (p.producto || '—');
+				return `
 			<tr>
-				<td>#${String(p.id).padStart(3,'0')}</td>
+				<td>#${String(p.id).padStart(3, '0')}</td>
 				<td>${p.cliente || '<em style="color:#aaa">—</em>'}</td>
 				<td><span class="items-badge">${itemsTxt}</span></td>
 				<td>$${money(p.total)}</td>
-				<td>${p.metodo_pago ? p.metodo_pago.charAt(0).toUpperCase()+p.metodo_pago.slice(1) : '—'}</td>
+				<td>${p.metodo_pago ? p.metodo_pago.charAt(0).toUpperCase() + p.metodo_pago.slice(1) : '—'}</td>
 				<td>${hora}</td>
 				<td><span class="status ${cls}">${lbl}</span></td>
 				<td>
 					<button class="btn small" onclick="abrirModalEstado(${p.id},'${p.estado}')">Cambiar Estado</button>
 				</td>
 			</tr>`;
-	}).join('');
+			}).join('');
 
-	// paginación
-	let pag = '';
-	for (let i=1; i<=pages; i++) {
-		pag += `<button class="${i===pagina?'active':''}" onclick="irPagina(${i})">${i}</button>`;
-	}
-	$('paginacion').innerHTML = pag;
-}
+			// paginación
+			let pag = '';
+			for (let i = 1; i <= pages; i++) {
+				pag += `<button class="${i === pagina ? 'active' : ''}" onclick="irPagina(${i})">${i}</button>`;
+			}
+			$('paginacion').innerHTML = pag;
+		}
 
-function irPagina(n) { pagina = n; renderPedidos(); }
+		function irPagina(n) {pagina = n; renderPedidos();}
 
-function actualizarCards() {
-	const hoy = new Date().toDateString();
-	const list = pedidosTodos;
-	$('cPendiente').textContent  = list.filter(p => p.estado === 'pendiente').length;
-	$('cProceso').textContent    = list.filter(p => p.estado === 'en_proceso').length;
-	$('cEntregado').textContent  = list.filter(p => p.estado === 'entregado' && new Date(p.fecha).toDateString() === hoy).length;
-	const totalHoy = list
-		.filter(p => new Date(p.fecha).toDateString() === hoy)
-		.reduce((s, p) => s + (+p.total), 0);
-	$('cTotal').textContent = '$' + money(totalHoy);
-}
+		function actualizarCards() {
+			const hoy = new Date().toDateString();
+			const list = pedidosTodos;
+			$('cPendiente').textContent = list.filter(p => p.estado === 'pendiente').length;
+			$('cProceso').textContent = list.filter(p => p.estado === 'en_proceso').length;
+			$('cEntregado').textContent = list.filter(p => p.estado === 'entregado' && new Date(p.fecha).toDateString() === hoy).length;
+			const totalHoy = list
+				.filter(p => new Date(p.fecha).toDateString() === hoy)
+				.reduce((s, p) => s + (+p.total), 0);
+			$('cTotal').textContent = '$' + money(totalHoy);
+		}
 
-// ─── Modal Nuevo Pedido ──────────────────────────────────
-function abrirModal() {
-	itemsModal = [];
-	$('modalCliente').value = '';
-	$('modalCantidad').value = 1;
-	$('modalProducto').value = '';
-	$('modalError').textContent = '';
-	renderItemsModal();
-	$('modalPedido').style.display = 'flex';
-}
+		// ─── Modal Nuevo Pedido ──────────────────────────────────
+		function abrirModal() {
+			itemsModal = [];
+			$('modalCliente').value = '';
+			$('modalCantidad').value = 1;
+			$('modalProducto').value = '';
+			$('modalError').textContent = '';
+			renderItemsModal();
+			$('modalPedido').style.display = 'flex';
+		}
 
-function cerrarModal() {
-	$('modalPedido').style.display = 'none';
-}
+		function cerrarModal() {
+			$('modalPedido').style.display = 'none';
+		}
 
-function agregarItemModal() {
-	const sel = $('modalProducto');
-	const id = +sel.value;
-	if (!id) { $('modalError').textContent = 'Selecciona un producto.'; return; }
-	const precio = +sel.options[sel.selectedIndex].dataset.precio;
-	const nombre = sel.options[sel.selectedIndex].text.split('·')[0].trim();
-	const cantidad = Math.max(1, +$('modalCantidad').value || 1);
-	$('modalError').textContent = '';
+		function agregarItemModal() {
+			const sel = $('modalProducto');
+			const id = +sel.value;
+			if (!id) {$('modalError').textContent = 'Selecciona un producto.'; return;}
+			const precio = +sel.options[sel.selectedIndex].dataset.precio;
+			const nombre = sel.options[sel.selectedIndex].text.split('·')[0].trim();
+			const cantidad = Math.max(1, +$('modalCantidad').value || 1);
+			$('modalError').textContent = '';
 
-	const exist = itemsModal.find(i => i.id === id);
-	if (exist) exist.cantidad += cantidad;
-	else itemsModal.push({ id, nombre, precio, cantidad });
-	renderItemsModal();
-}
+			const exist = itemsModal.find(i => i.id === id);
+			if (exist) exist.cantidad += cantidad;
+			else itemsModal.push({id, nombre, precio, cantidad});
+			renderItemsModal();
+		}
 
-function quitarItemModal(id) {
-	itemsModal = itemsModal.filter(i => i.id !== id);
-	renderItemsModal();
-}
+		function quitarItemModal(id) {
+			itemsModal = itemsModal.filter(i => i.id !== id);
+			renderItemsModal();
+		}
 
-function renderItemsModal() {
-	const c = $('modalItems');
-	if (!itemsModal.length) {
-		c.innerHTML = '<p style="color:#aaa;font-size:13px;margin:0">Sin productos agregados.</p>';
-		$('modalTotal').textContent = '0.00';
-		return;
-	}
-	c.innerHTML = itemsModal.map(i => `
+		function renderItemsModal() {
+			const c = $('modalItems');
+			if (!itemsModal.length) {
+				c.innerHTML = '<p style="color:#aaa;font-size:13px;margin:0">Sin productos agregados.</p>';
+				$('modalTotal').textContent = '0.00';
+				return;
+			}
+			c.innerHTML = itemsModal.map(i => `
 		<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
 			<span>${i.cantidad}× ${i.nombre}</span>
 			<span>$${money(i.precio * i.cantidad)}
 				<button onclick="quitarItemModal(${i.id})" style="border:none;background:none;color:#d62828;cursor:pointer;margin-left:6px">✕</button>
 			</span>
 		</div>`).join('');
-	const total = itemsModal.reduce((s, i) => s + i.precio * i.cantidad, 0);
-	$('modalTotal').textContent = money(total);
-}
-
-async function crearPedido() {
-	$('modalError').textContent = '';
-	if (!itemsModal.length) { $('modalError').textContent = 'Agrega al menos un producto.'; return; }
-
-	const btn = $('btnGuardar');
-	btn.disabled = true;
-	btn.innerHTML = '<span class="spinner"></span>Guardando…';
-
-	const payload = {
-		metodo_pago: $('modalPago').value,
-		cliente: $('modalCliente').value.trim() || null,
-		items: itemsModal.map(i => ({ id_producto: i.id, cantidad: i.cantidad }))
-	};
-
-	try {
-		const r = await fetch('../api/ventas/create.php', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(payload),
-			credentials: 'same-origin'
-		});
-		const d = await r.json().catch(() => null);
-		if (!r.ok || !d?.ok) {
-			$('modalError').textContent = d?.error || `Error (${r.status})`;
-			return;
+			const total = itemsModal.reduce((s, i) => s + i.precio * i.cantidad, 0);
+			$('modalTotal').textContent = money(total);
 		}
-		toast(`Pedido #${String(d.id).padStart(3,'0')} creado correctamente`);
-		cerrarModal();
-		cargarPedidos();
-	} catch {
-		$('modalError').textContent = 'Error de red. Inténtalo de nuevo.';
-	} finally {
-		btn.disabled = false;
-		btn.textContent = 'Guardar Pedido';
-	}
-}
 
-// ─── Modal Cambiar Estado ────────────────────────────────
-function abrirModalEstado(id, estadoActual) {
-	pedidoEstadoId = id;
-	$('estPedidoId').textContent = `#${String(id).padStart(3,'0')}`;
-	$('nuevoEstado').value = estadoActual;
-	$('estadoError').textContent = '';
-	$('modalEstado').style.display = 'flex';
-}
+		async function crearPedido() {
+			$('modalError').textContent = '';
+			if (!itemsModal.length) {$('modalError').textContent = 'Agrega al menos un producto.'; return;}
 
-function cerrarModalEstado() {
-	$('modalEstado').style.display = 'none';
-}
+			const btn = $('btnGuardar');
+			btn.disabled = true;
+			btn.innerHTML = '<span class="spinner"></span>Guardando…';
 
-async function confirmarEstado() {
-	const estado = $('nuevoEstado').value;
-	$('estadoError').textContent = '';
+			const payload = {
+				metodo_pago: $('modalPago').value,
+				cliente: $('modalCliente').value.trim() || null,
+				items: itemsModal.map(i => ({id_producto: i.id, cantidad: i.cantidad}))
+			};
 
-	try {
-		const r = await fetch('../api/ventas/update_estado.php', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ id: pedidoEstadoId, estado }),
-			credentials: 'same-origin'
-		});
-		const d = await r.json().catch(() => null);
-		if (!r.ok || !d?.ok) {
-			$('estadoError').textContent = d?.error || `Error (${r.status})`;
-			return;
+			try {
+				const r = await fetch('../api/ventas/create.php', {
+					method: 'POST',
+					headers: {'Content-Type': 'application/json'},
+					body: JSON.stringify(payload),
+					credentials: 'same-origin'
+				});
+				const d = await r.json().catch(() => null);
+				if (!r.ok || !d?.ok) {
+					$('modalError').textContent = d?.error || `Error (${r.status})`;
+					return;
+				}
+				toast(`Pedido #${String(d.id).padStart(3, '0')} creado correctamente`);
+				cerrarModal();
+				cargarPedidos();
+			} catch {
+				$('modalError').textContent = 'Error de red. Inténtalo de nuevo.';
+			} finally {
+				btn.disabled = false;
+				btn.textContent = 'Guardar Pedido';
+			}
 		}
-		toast('Estado actualizado');
-		cerrarModalEstado();
+
+		// ─── Modal Cambiar Estado ────────────────────────────────
+		function abrirModalEstado(id, estadoActual) {
+			pedidoEstadoId = id;
+			$('estPedidoId').textContent = `#${String(id).padStart(3, '0')}`;
+			$('nuevoEstado').value = estadoActual;
+			$('estadoError').textContent = '';
+			$('modalEstado').style.display = 'flex';
+		}
+
+		function cerrarModalEstado() {
+			$('modalEstado').style.display = 'none';
+		}
+
+		async function confirmarEstado() {
+			const estado = $('nuevoEstado').value;
+			$('estadoError').textContent = '';
+
+			try {
+				const r = await fetch('../api/ventas/update_estado.php', {
+					method: 'POST',
+					headers: {'Content-Type': 'application/json'},
+					body: JSON.stringify({id: pedidoEstadoId, estado}),
+					credentials: 'same-origin'
+				});
+				const d = await r.json().catch(() => null);
+				if (!r.ok || !d?.ok) {
+					$('estadoError').textContent = d?.error || `Error (${r.status})`;
+					return;
+				}
+				toast('Estado actualizado');
+				cerrarModalEstado();
+				cargarPedidos();
+			} catch {
+				$('estadoError').textContent = 'Error de red.';
+			}
+		}
+
+		// ─── Filtros en tiempo real ──────────────────────────────
+		$('buscar').addEventListener('input', () => {pagina = 1; renderPedidos();});
+		$('filtroEstado').addEventListener('change', cargarPedidos);
+		$('filtroFecha').addEventListener('change', cargarPedidos);
+
+		// ─── Init ────────────────────────────────────────────────
+		// Poner fecha de hoy por defecto
+		$('filtroFecha').value = new Date().toISOString().slice(0, 10);
+
+		cargarProductos();
 		cargarPedidos();
-	} catch {
-		$('estadoError').textContent = 'Error de red.';
-	}
-}
 
-// ─── Filtros en tiempo real ──────────────────────────────
-$('buscar').addEventListener('input', () => { pagina = 1; renderPedidos(); });
-$('filtroEstado').addEventListener('change', cargarPedidos);
-$('filtroFecha').addEventListener('change', cargarPedidos);
-
-// ─── Init ────────────────────────────────────────────────
-// Poner fecha de hoy por defecto
-$('filtroFecha').value = new Date().toISOString().slice(0, 10);
-
-cargarProductos();
-cargarPedidos();
-
-// Auto-refresh cada 30 s
-setInterval(cargarPedidos, 30_000);
-</script>
+		// Auto-refresh cada 30 s
+		setInterval(cargarPedidos, 30_000);
+	</script>
 
 </body>
+<<<<<<< HEAD
 </html>
+=======
+
+</html>
+>>>>>>> a3ab7fc0ffe4be0d2725ebec032c6214644679ee
