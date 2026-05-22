@@ -70,6 +70,4 @@ $_SESSION['id_empleado'] = (int)$cred['id_empleado'];
 $_SESSION['usuario'] = $cred['usuario'];
 $_SESSION['acceso'] = $cred['acceso'];
 
-// Redirigir al inventario
-header('Location: /html/inventario.html');
-exit;
+header('HX-Redirect: /pollosBrothers/html/dashboard.html');

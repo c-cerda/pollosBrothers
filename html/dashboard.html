@@ -6,13 +6,14 @@
 	<title>Dashboard - Pollos</title>
 	<link rel="stylesheet" href="../styles/style.css">
 	<script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 </head>
 
 <body>
 
 	<header class="topbar">
 		<div class="logo">🐔 Pollos El Diferente</div>
-		<div class="user">Administrador ⌄</div>
+		<div class="user">Administrador</div>
 	</header>
 
 	<div class="container">
@@ -20,39 +21,38 @@
 		<aside class="sidebar">
 			<h3>Menú</h3>
 			<ul>
-				<li class="active">Dashboard</li>
-				<li>Pedidos</li>
-				<li>Ventas</li>
-				<li>Inventario</li>
-				<li class="config">Configuración</li>
-				<li class="logout">Cerrar Sesión</li>
+				<li><a href="../html/dashboard.html">Dashboard</a></li>
+				<li class=" active"><a href="../html/pedidos.html">Pedidos</a></li>
+				<li><a href="../html/inventario.html">Inventario</a> </li>
+				<li class="logout"><a href="../api/util/logout.php">Cerrar Sesión</a></li>
 			</ul>
 		</aside>
 
 		<main class="content">
 			<h2>¡Bienvenido, Administrador!</h2>
 
-			<div class="cards">
+			<div class="cards" hx-get="../api/stats.php" hx-trigger="load" hx-swap="outerHTML">
 				<div class="card red">
 					<p>Pedidos Pendientes</p>
-					<h3>8</h3>
+					<h3>-</h3>
 				</div>
 				<div class="card orange">
 					<p>Órdenes del Día</p>
-					<h3>24</h3>
+					<h3>-</h3>
 				</div>
 				<div class="card yellow">
 					<p>Ingresos del Día</p>
-					<h3>$1,850.00</h3>
+					<h3>-</h3>
 				</div>
 				<div class="card blue">
 					<p>Inventario Bajo</p>
-					<h3>2</h3>
+					<h3>-</h3>
 				</div>
 			</div>
 
 			<div class="grid">
-				<div class="table">
+				<div class="table" hx-get="../api/pedidos_recientes.php" hx-trigger="load"
+					hx-swap="outerHTML">
 					<h3>Pedidos Recientes</h3>
 					<table>
 						<thead>
@@ -65,16 +65,10 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td>Juan Pérez</td>
-								<td><span class="status pending">Pendiente</span></td>
-								<td>$320</td>
-								<td>12:45 PM</td>
-							</tr>
-							<tr>
-								<td>María González</td>
-								<td><span class="status done">Entregado</span></td>
-								<td>$450</td>
-								<td>12:30 PM</td>
+								<td>Cargando...</td>
+								<td>-</td>
+								<td>-</td>
+								<td>-</td>
 							</tr>
 						</tbody>
 					</table>
@@ -82,12 +76,60 @@
 
 				<div class="chart">
 					<h3>Ventas de la Semana</h3>
-					<div class="fake-chart"></div>
+					<canvas id="chartVentas" width="400" height="200"></canvas>
 				</div>
 			</div>
 
 		</main>
 	</div>
+
+	<script>
+		async function cargarGraficoVentas() {
+			try {
+				const response = await fetch('../api/ventas_semana.php');
+				const data = await response.json();
+
+				const ctx = document.getElementById('chartVentas').getContext('2d');
+				new Chart(ctx, {
+					type: 'bar',
+					data: {
+						labels: data.dias,
+						datasets: [{
+							label: 'Ventas ($)',
+							data: data.totales,
+							backgroundColor: '#ff6a00',
+							borderColor: '#ff4d00',
+							borderWidth: 1
+						}]
+					},
+					options: {
+						responsive: false,
+						maintainAspectRatio: false,
+						scales: {
+							y: {
+								beginAtZero: true,
+								ticks: {
+									callback: function (value) {
+										return '$' + value.toFixed(2);
+									}
+								}
+							}
+						},
+						plugins: {
+							legend: {
+								display: false
+							}
+						}
+					}
+				});
+			} catch (error) {
+				console.error('Error cargando gráfico de ventas:', error);
+			}
+		}
+
+		// Cargar gráfico cuando la página esté lista
+		document.addEventListener('DOMContentLoaded', cargarGraficoVentas);
+	</script>
 
 </body>
 
