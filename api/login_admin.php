@@ -1,19 +1,15 @@
 <?php
-// Verifies the submitted secret against the stored hash. On success, sets the
-// session and tells htmx to redirect to the role's dashboard via HX-Redirect.
-// On failure, returns a short error fragment for the #login-error target.
+// Verifica usuario + contraseña contra una credencial con rol admin.
 
 session_start();
 require_once __DIR__ . '/util/conec.php';
 
 header('Content-Type: text/html; charset=utf-8');
 
-$id_empleado = filter_input(INPUT_POST, 'id_empleado', FILTER_VALIDATE_INT);
-$password = $_POST['password'] ?? null;
-$pin = $_POST['pin'] ?? null;
+$usuario = trim($_POST['usuario'] ?? '');
+$password = $_POST['password'] ?? '';
 
-if (!$id_empleado) {
-	http_response_code(400);
+if ($usuario === '' || $password === '') {
 	echo 'Solicitud inválida.';
 	exit;
 }
@@ -27,13 +23,15 @@ if (!$conn) {
 }
 
 $stmt = $conn->prepare(
-	"SELECT c.id, c.id_empleado, c.usuario, c.password_hash, c.pin_hash, c.acceso,
+	"SELECT c.id, c.id_empleado, c.usuario, c.password_hash, c.acceso,
 	        c.failed_attempts, c.locked_until
 	 FROM credenciales c
 	 JOIN empleados e ON e.id = c.id_empleado
-	 WHERE c.id_empleado = :id AND e.activo = TRUE"
+	 WHERE c.usuario = :usuario
+	   AND c.acceso = 'admin'
+	   AND e.activo = TRUE"
 );
-$stmt->execute([':id' => $id_empleado]);
+$stmt->execute([':usuario' => $usuario]);
 $cred = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$cred) {
@@ -46,16 +44,7 @@ if ($cred['locked_until'] && strtotime($cred['locked_until']) > time()) {
 	exit;
 }
 
-$ok = false;
-if ($cred['acceso'] === 'admin') {
-	$ok = is_string($password) && password_verify($password, $cred['password_hash']);
-} else {
-	$ok = is_string($pin)
-		&& preg_match('/^\d{6}$/', $pin) === 1
-		&& password_verify($pin, $cred['pin_hash']);
-}
-
-if (!$ok) {
+if (!password_verify($password, $cred['password_hash'])) {
 	$upd = $conn->prepare(
 		"UPDATE credenciales
 		 SET failed_attempts = failed_attempts + 1,
@@ -81,10 +70,4 @@ $_SESSION['id_empleado'] = (int)$cred['id_empleado'];
 $_SESSION['usuario'] = $cred['usuario'];
 $_SESSION['acceso'] = $cred['acceso'];
 
-$destino = match ($cred['acceso']) {
-	'admin'    => '/html/admin.html',
-	'cajero'   => '/html/caja.html',
-	'cocinero' => '/html/cocina.html',
-};
-
-header('HX-Redirect: ' . $destino);
+header('HX-Redirect: /html/admin.html');
