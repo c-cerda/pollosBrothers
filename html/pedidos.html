@@ -4,8 +4,182 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Pedidos - Pollos</title>
+
 	<link rel="stylesheet" href="../styles/style.css">
-	<script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+
+	<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+
+	<style>
+		body {
+			margin: 0;
+			font-family: Arial, sans-serif;
+			background: #f5f5f5;
+		}
+
+		.topbar {
+			background: #d62828;
+			color: white;
+			padding: 15px 25px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.container {
+			display: flex;
+			min-height: 100vh;
+		}
+
+		.sidebar {
+			width: 220px;
+			background: #222;
+			color: white;
+			padding: 20px;
+		}
+
+		.sidebar ul {
+			list-style: none;
+			padding: 0;
+		}
+
+		.sidebar li {
+			padding: 12px;
+			margin-bottom: 5px;
+			border-radius: 6px;
+			cursor: pointer;
+		}
+
+		.sidebar li.active {
+			background: #d62828;
+		}
+
+		.content {
+			flex: 1;
+			padding: 25px;
+		}
+
+		.inventory-actions {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 20px;
+		}
+
+		.inventory-actions input {
+			width: 300px;
+			padding: 10px;
+		}
+
+		.cards {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 15px;
+			margin-bottom: 25px;
+		}
+
+		.card {
+			padding: 20px;
+			border-radius: 10px;
+			color: white;
+		}
+
+		.red {
+			background: #d62828;
+		}
+
+		.orange {
+			background: #f77f00;
+		}
+
+		.blue {
+			background: #003049;
+		}
+
+		.yellow {
+			background: #fcbf49;
+			color: black;
+		}
+
+		.table {
+			background: white;
+			padding: 20px;
+			border-radius: 10px;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			padding: 12px;
+			border-bottom: 1px solid #ddd;
+			text-align: left;
+		}
+
+		.status {
+			padding: 5px 10px;
+			border-radius: 20px;
+			font-size: 12px;
+			color: white;
+		}
+
+		.pending {
+			background: #d62828;
+		}
+
+		.done {
+			background: green;
+		}
+
+		.warning {
+			background: orange;
+		}
+
+		.btn {
+			padding: 8px 14px;
+			border: none;
+			border-radius: 6px;
+			cursor: pointer;
+		}
+
+		.btn.add {
+			background: #d62828;
+			color: white;
+		}
+
+		.btn.small {
+			padding: 5px 10px;
+			background: #003049;
+			color: white;
+		}
+
+		.modal {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.5);
+			justify-content: center;
+			align-items: center;
+		}
+
+		.modal-content {
+			background: white;
+			padding: 25px;
+			border-radius: 10px;
+			width: 400px;
+		}
+
+		.modal-content input,
+		.modal-content select {
+			width: 100%;
+			padding: 10px;
+			margin-bottom: 15px;
+		}
+	</style>
 </head>
 
 <body>
@@ -19,101 +193,329 @@
 
 		<aside class="sidebar">
 			<h3>Menú</h3>
+
 			<ul>
 				<li>Dashboard</li>
 				<li class="active">Pedidos</li>
 				<li>Ventas</li>
 				<li>Inventario</li>
-				<li class="config">Configuración</li>
-				<li class="logout">Cerrar Sesión</li>
+				<li>Configuración</li>
+				<li>Cerrar Sesión</li>
 			</ul>
 		</aside>
 
 		<main class="content">
+
 			<h2>Gestión de Pedidos</h2>
 
-			<!-- ACTION BAR -->
 			<div class="inventory-actions">
-				<input type="text" placeholder="Buscar pedido o cliente...">
-				<button class="btn add">+ Nuevo Pedido</button>
+
+				<input
+					type="text"
+					id="buscar"
+					placeholder="Buscar pedido o cliente..."
+					onkeyup="filtrarPedidos()">
+
+				<button
+					class="btn add"
+					onclick="abrirModal()">
+					+ Nuevo Pedido
+				</button>
+
 			</div>
 
-			<!-- SUMMARY CARDS -->
 			<div class="cards">
+
 				<div class="card red">
 					<p>Pedidos Pendientes</p>
-					<h3>8</h3>
+					<h3 id="pendientes">0</h3>
 				</div>
+
 				<div class="card orange">
 					<p>En Proceso</p>
-					<h3>6</h3>
+					<h3 id="proceso">0</h3>
 				</div>
+
 				<div class="card blue">
 					<p>Entregados Hoy</p>
-					<h3>15</h3>
+					<h3 id="entregados">0</h3>
 				</div>
+
 				<div class="card yellow">
 					<p>Total del Día</p>
-					<h3>24</h3>
+					<h3 id="totalDia">0</h3>
 				</div>
+
 			</div>
 
-			<!-- ORDERS TABLE -->
 			<div class="table">
+
 				<h3>Lista de Pedidos</h3>
+
 				<table>
+
 					<thead>
 						<tr>
 							<th>ID</th>
 							<th>Cliente</th>
-							<th>Productos</th>
+							<th>Producto</th>
 							<th>Total</th>
 							<th>Hora</th>
 							<th>Estado</th>
 							<th>Acciones</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td>#001</td>
-							<td>Juan Pérez</td>
-							<td>2x Pechuga, 1x Refresco</td>
-							<td>$320</td>
-							<td>12:45 PM</td>
-							<td><span class="status pending">Pendiente</span></td>
-							<td>
-								<button class="btn small">Ver</button>
-								<button class="btn small">Editar</button>
-							</td>
-						</tr>
-						<tr>
-							<td>#002</td>
-							<td>María González</td>
-							<td>3x Alitas</td>
-							<td>$450</td>
-							<td>12:30 PM</td>
-							<td><span class="status done">Entregado</span></td>
-							<td>
-								<button class="btn small">Ver</button>
-							</td>
-						</tr>
-						<tr>
-							<td>#003</td>
-							<td>Carlos Ramírez</td>
-							<td>1x Combo Familiar</td>
-							<td>$640</td>
-							<td>12:10 PM</td>
-							<td><span class="status warning">En proceso</span></td>
-							<td>
-								<button class="btn small">Ver</button>
-								<button class="btn small">Editar</button>
-							</td>
-						</tr>
+
+					<tbody id="tablaPedidos">
 					</tbody>
+
 				</table>
+
 			</div>
 
 		</main>
+
 	</div>
 
+	<!-- MODAL -->
+
+	<div class="modal" id="modalPedido">
+
+		<div class="modal-content">
+
+			<h2>Nuevo Pedido</h2>
+
+			<input type="text" id="cliente" placeholder="Nombre del cliente">
+
+			<select id="producto">
+				<option value="">Selecciona producto</option>
+			</select>
+
+			<input type="number" id="cantidad" placeholder="Cantidad">
+
+			<button class="btn add" onclick="crearPedido()">
+				Guardar Pedido
+			</button>
+
+			<button class="btn" onclick="cerrarModal()">
+				Cancelar
+			</button>
+
+		</div>
+
+	</div>
+
+	<script>
+
+		let pedidos = [];
+
+		async function cargarProductos() {
+
+			const response = await fetch('/api/productos/list.php');
+
+			const data = await response.json();
+
+			if (!data.ok) {
+				alert(data.error);
+				return;
+			}
+
+			const select = document.getElementById('producto');
+
+			data.productos.forEach(producto => {
+
+				select.innerHTML += `
+					<option 
+						value="${producto.id}"
+						data-precio="${producto.precio}">
+						${producto.nombre} - $${producto.precio}
+					</option>
+				`;
+
+			});
+
+		}
+
+		function abrirModal() {
+			document.getElementById('modalPedido').style.display = 'flex';
+		}
+
+		function cerrarModal() {
+			document.getElementById('modalPedido').style.display = 'none';
+		}
+
+		function crearPedido() {
+
+			const cliente = document.getElementById('cliente').value;
+
+			const productoSelect = document.getElementById('producto');
+
+			const productoTexto =
+				productoSelect.options[productoSelect.selectedIndex].text;
+
+			const precio =
+				parseFloat(
+					productoSelect.options[
+						productoSelect.selectedIndex
+					].dataset.precio
+				);
+
+			const cantidad =
+				parseInt(document.getElementById('cantidad').value);
+
+			if (!cliente || !cantidad) {
+				alert('Completa todos los campos');
+				return;
+			}
+
+			const total = precio * cantidad;
+
+			const pedido = {
+
+				id: pedidos.length + 1,
+
+				cliente,
+
+				producto: productoTexto,
+
+				total,
+
+				hora: new Date().toLocaleTimeString(),
+
+				estado: 'Pendiente'
+
+			};
+
+			pedidos.push(pedido);
+
+			renderizarPedidos();
+
+			actualizarCards();
+
+			cerrarModal();
+
+		}
+
+		function renderizarPedidos() {
+
+			const tabla = document.getElementById('tablaPedidos');
+
+			tabla.innerHTML = '';
+
+			pedidos.forEach(pedido => {
+
+				let claseEstado = 'pending';
+
+				if (pedido.estado === 'Entregado') {
+					claseEstado = 'done';
+				}
+
+				if (pedido.estado === 'En proceso') {
+					claseEstado = 'warning';
+				}
+
+				tabla.innerHTML += `
+					<tr>
+
+						<td>#${pedido.id}</td>
+
+						<td>${pedido.cliente}</td>
+
+						<td>${pedido.producto}</td>
+
+						<td>$${pedido.total}</td>
+
+						<td>${pedido.hora}</td>
+
+						<td>
+							<span class="status ${claseEstado}">
+								${pedido.estado}
+							</span>
+						</td>
+
+						<td>
+
+							<button
+								class="btn small"
+								onclick="cambiarEstado(${pedido.id})">
+								Cambiar Estado
+							</button>
+
+						</td>
+
+					</tr>
+				`;
+
+			});
+
+		}
+
+		function cambiarEstado(id) {
+
+			const pedido = pedidos.find(p => p.id === id);
+
+			if (pedido.estado === 'Pendiente') {
+				pedido.estado = 'En proceso';
+			}
+			else if (pedido.estado === 'En proceso') {
+				pedido.estado = 'Entregado';
+			}
+
+			renderizarPedidos();
+
+			actualizarCards();
+
+		}
+
+		function actualizarCards() {
+
+			const pendientes =
+				pedidos.filter(p => p.estado === 'Pendiente').length;
+
+			const proceso =
+				pedidos.filter(p => p.estado === 'En proceso').length;
+
+			const entregados =
+				pedidos.filter(p => p.estado === 'Entregado').length;
+
+			document.getElementById('pendientes').innerText = pendientes;
+
+			document.getElementById('proceso').innerText = proceso;
+
+			document.getElementById('entregados').innerText = entregados;
+
+			document.getElementById('totalDia').innerText = pedidos.length;
+
+		}
+
+		function filtrarPedidos() {
+
+			const texto =
+				document.getElementById('buscar')
+				.value
+				.toLowerCase();
+
+			const filas =
+				document.querySelectorAll('#tablaPedidos tr');
+
+			filas.forEach(fila => {
+
+				const contenido =
+					fila.innerText.toLowerCase();
+
+				fila.style.display =
+					contenido.includes(texto)
+						? ''
+						: 'none';
+
+			});
+
+		}
+
+		cargarProductos();
+
+	</script>
+
 </body>
+
+</html>
