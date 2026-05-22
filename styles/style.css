@@ -615,12 +615,22 @@ td {
 	text-align: center;
 }
 
-.tab-badge[hidden] { display: none; }
+.tab-badge[hidden] {
+	display: none;
+}
 
 @keyframes pulseBadge {
-	0%   { transform: scale(1);   }
-	50%  { transform: scale(1.4); }
-	100% { transform: scale(1);   }
+	0% {
+		transform: scale(1);
+	}
+
+	50% {
+		transform: scale(1.4);
+	}
+
+	100% {
+		transform: scale(1);
+	}
 }
 
 .tab-badge.pulse {
@@ -689,7 +699,9 @@ td {
 	font-size: 14px;
 }
 
-.ticket-msg:empty { display: none; }
+.ticket-msg:empty {
+	display: none;
+}
 
 .ticket-msg.error {
 	background: #fdecea;
@@ -806,3 +818,296 @@ td {
 	font-size: 18px;
 }
 
+/* =========================================
+   KITCHEN DISPLAY — REAL KITCHEN MODE
+   Pantalla grande + celular
+========================================= */
+
+.kitchen-body {
+	background: #111;
+	color: white;
+	min-height: 100vh;
+	padding: 16px;
+	font-family: Arial, sans-serif;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.kitchen-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	margin-bottom: 20px;
+
+	padding: 16px 20px;
+
+	background: #1b1b1b;
+
+	border-radius: 18px;
+
+	border: 2px solid #2a2a2a;
+}
+
+.kitchen-header h1 {
+	font-size: clamp(28px, 4vw, 48px);
+	font-weight: 800;
+	letter-spacing: 1px;
+}
+
+.kitchen-logout {
+	background: #ff3c3c;
+	color: white;
+
+	padding: 14px 18px;
+
+	border-radius: 14px;
+
+	font-size: 18px;
+	font-weight: bold;
+}
+
+/* =========================================
+   GRID
+========================================= */
+
+.pedidos-list {
+	display: grid;
+
+	grid-template-columns:
+		repeat(auto-fit, minmax(360px, 1fr));
+
+	gap: 18px;
+
+	align-items: start;
+}
+
+/* =========================================
+   CARD
+========================================= */
+
+.pedido-card {
+	background: #1d1d1d;
+
+	border-radius: 24px;
+
+	padding: 22px;
+
+	border: 3px solid #2b2b2b;
+
+	box-shadow:
+		0 10px 25px rgba(0, 0, 0, 0.35);
+
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+
+	min-height: 340px;
+}
+
+/* =========================================
+   ESTADOS
+========================================= */
+
+.pedido-card.pendiente {
+	border-color: #ff3c3c;
+}
+
+.pedido-card.en_proceso {
+	border-color: #ff9f1a;
+}
+
+/* =========================================
+   HEADER CARD
+========================================= */
+
+.pedido-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.pedido-id {
+	font-size: clamp(42px, 6vw, 64px);
+	font-weight: 900;
+	line-height: 1;
+}
+
+.pedido-time {
+	background: #2a2a2a;
+
+	padding: 10px 14px;
+
+	border-radius: 12px;
+
+	font-size: 20px;
+	font-weight: bold;
+
+	color: #ccc;
+}
+
+/* =========================================
+   CLIENTE
+========================================= */
+
+.pedido-cliente {
+	font-size: 24px;
+	color: #bbb;
+	font-weight: 600;
+}
+
+/* =========================================
+   ITEMS
+========================================= */
+
+.pedido-items {
+	list-style: none;
+
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.pedido-items li {
+	background: #2a2a2a;
+
+	padding: 16px 18px;
+
+	border-radius: 16px;
+
+	font-size: clamp(22px, 3vw, 32px);
+	font-weight: 700;
+
+	display: flex;
+	align-items: center;
+	gap: 16px;
+
+	line-height: 1.2;
+}
+
+/* CANTIDAD */
+.qty {
+	background: #ff3c3c;
+
+	min-width: 52px;
+	height: 52px;
+
+	border-radius: 50%;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	font-size: 22px;
+	font-weight: 900;
+
+	flex-shrink: 0;
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.pedido-actions {
+	margin-top: auto;
+}
+
+.pedido-listo-btn {
+	width: 100%;
+
+	background: #28c76f;
+
+	color: white;
+
+	border: none;
+
+	padding: 22px;
+
+	border-radius: 18px;
+
+	font-size: clamp(22px, 2.5vw, 30px);
+	font-weight: 900;
+
+	cursor: pointer;
+
+	transition:
+		transform 0.1s,
+		filter 0.1s;
+}
+
+.pedido-listo-btn:hover {
+	filter: brightness(1.05);
+}
+
+.pedido-listo-btn:active {
+	transform: scale(0.98);
+}
+
+/* =========================================
+   EMPTY
+========================================= */
+
+.pedidos-empty {
+	background: #1d1d1d;
+
+	padding: 60px 20px;
+
+	border-radius: 20px;
+
+	text-align: center;
+
+	font-size: 28px;
+	font-weight: bold;
+
+	color: #999;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+	.kitchen-body {
+		padding: 10px;
+	}
+
+	.kitchen-header {
+		padding: 14px;
+		border-radius: 14px;
+	}
+
+	.kitchen-logout {
+		font-size: 15px;
+		padding: 10px 14px;
+	}
+
+	.pedidos-list {
+		grid-template-columns: 1fr;
+		gap: 14px;
+	}
+
+	.pedido-card {
+		padding: 16px;
+		border-radius: 18px;
+		min-height: auto;
+	}
+
+	.pedido-items li {
+		font-size: 24px;
+		padding: 14px;
+	}
+
+	.qty {
+		width: 46px;
+		height: 46px;
+		font-size: 18px;
+	}
+
+	.pedido-listo-btn {
+		padding: 18px;
+		font-size: 24px;
+	}
+}
