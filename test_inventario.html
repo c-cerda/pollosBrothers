@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Inventario - Sin Autenticación</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+    <div style="max-width: 1200px; margin: 20px auto; padding: 20px;">
+        <h1>🧪 Prueba de APIs de Inventario</h1>
+        <p><em>Esta página es para debugging - no requiere autenticación</em></p>
+        
+        <div style="background: #f0f0f0; padding: 15px; margin: 20px 0; border-radius: 8px;">
+            <h3>Estado de Conexión</h3>
+            <div id="connectionStatus">Verificando...</div>
+        </div>
+
+        <div style="background: #e3f2fd; padding: 15px; margin: 20px 0; border-radius: 8px;">
+            <h3>📊 Estadísticas (sin autenticación requerida)</h3>
+            <div id="statsResult">Cargando...</div>
+        </div>
+
+        <div style="background: #fff3e0; padding: 15px; margin: 20px 0; border-radius: 8px;">
+            <h3>📦 Productos (sin autenticación requerida)</h3>
+            <div id="productsResult">Cargando...</div>
+        </div>
+
+        <div style="background: #f3e5f5; padding: 15px; margin: 20px 0; border-radius: 8px;">
+            <h3>🏷️ Categorías (sin autenticación requerida)</h3>
+            <div id="categoriasResult">Cargando...</div>
+        </div>
+
+        <div style="background: #c8e6c9; padding: 15px; margin: 20px 0; border-radius: 8px;">
+            <h3>🔍 Buscar "Papas"</h3>
+            <div id="papasResult">Buscando...</div>
+        </div>
+    </div>
+
+    <script>
+        // Test conexión directa a BD
+        fetch('/test_db.php')
+            .then(res => res.text())
+            .then(html => {
+                const status = html.includes('✅') ? '✅ Conexión a BD OK' : '❌ Error de conexión';
+                document.getElementById('connectionStatus').innerHTML = status;
+            })
+            .catch(err => {
+                document.getElementById('connectionStatus').innerHTML = '❌ Error: ' + err.message;
+            });
+
+        // Test APIs (esperamos error de autenticación, pero verificamos que respondan)
+        fetch('/api/inventario/stats.php')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('statsResult').innerHTML = 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            })
+            .catch(err => {
+                document.getElementById('statsResult').innerHTML = '❌ Error: ' + err.message;
+            });
+
+        fetch('/api/inventario/list.php')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('productsResult').innerHTML = 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            })
+            .catch(err => {
+                document.getElementById('productsResult').innerHTML = '❌ Error: ' + err.message;
+            });
+
+        fetch('/api/inventario/categorias.php')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('categoriasResult').innerHTML = 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            })
+            .catch(err => {
+                document.getElementById('categoriasResult').innerHTML = '❌ Error: ' + err.message;
+            });
+
+        // Buscar directamente en BD usando SQL
+        fetch('/test_db.php')
+            .then(res => res.text())
+            .then(html => {
+                const hasPapas = html.toLowerCase().includes('papas');
+                document.getElementById('papasResult').innerHTML = hasPapas 
+                    ? '✅ Producto "Papas" encontrado en la base de datos'
+                    : '❌ Producto "Papas" NO encontrado';
+            });
+    </script>
+</body>
+</html>
