@@ -70,4 +70,4 @@ $_SESSION['id_empleado'] = (int)$cred['id_empleado'];
 $_SESSION['usuario'] = $cred['usuario'];
 $_SESSION['acceso'] = $cred['acceso'];
 
-header('HX-Redirect: /pbros/html/dashboard.html');
+header('HX-Redirect: /pollosBrothers/html/dashboard.html');
