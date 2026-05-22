@@ -3,6 +3,7 @@
 // El PIN identifica al empleado: si exactamente un hash coincide, entra.
 
 session_start();
+
 require_once __DIR__ . '/util/conec.php';
 
 header('Content-Type: text/html; charset=utf-8');
@@ -67,8 +68,8 @@ $_SESSION['usuario'] = $cred['usuario'];
 $_SESSION['acceso'] = $cred['acceso'];
 
 $destino = match ($cred['acceso']) {
-	'cajero'   => '/pbros/html/caja.html',
-	'cocinero' => '/pbros/html/cocina.html',
+	'cajero'   => '/pollosBrothers/html/caja.html',
+	'cocinero' => '/pollosBrothers/html/cocina.html',
 };
 
 header('HX-Redirect: ' . $destino);
