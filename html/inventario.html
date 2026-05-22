@@ -2,112 +2,590 @@
 <html lang="es">
 
 <head>
-	<meta charset="UTF-8">
-	<title>Inventario - Pollos</title>
-	<link rel="stylesheet" href="../styles/style.css">
-	<script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+        <meta charset="UTF-8">
+        <title>Inventario - Pollos</title>
+        <link rel="stylesheet" href="../styles/style.css">
+        <script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
 </head>
 
 <body>
 
-	<header class="topbar">
-		<div class="logo">🐔 Pollos El Diferente</div>
-		<div class="user">Administrador ⌄</div>
-	</header>
+        <header class="topbar">
+                <div class="logo">🐔 Pollos El Diferente</div>
+                <div class="user">Administrador ⌄</div>
+        </header>
 
-	<div class="container">
+        <div class="container">
 
-		<aside class="sidebar">
-			<h3>Menú</h3>
-			<ul>
-				<li>Dashboard</li>
-				<li>Pedidos</li>
-				<li>Ventas</li>
-				<li class="active">Inventario</li>
-				<li class="config">Configuración</li>
-				<li class="logout">Cerrar Sesión</li>
-			</ul>
-		</aside>
+                <aside class="sidebar">
+                        <h3>Menú</h3>
+                        <ul>
+                                <li><a href="dashboard.html">Dashboard</a></li>
+                                <li><a href="pedidos.html">Pedidos</a></li>
+                                <li><a href="ventas.html">Ventas</a></li>
+                                <li class="active">Inventario</li>
+                                <li class="config">Configuración</li>
+                                <li class="logout"><a href="../api/util/logout.php">Cerrar Sesión</a></li>
+                        </ul>
+                </aside>
 
-		<main class="content">
-			<h2>Gestión de Inventario</h2>
+                <main class="content">
+                        <h2>Gestión de Inventario</h2>
 
-			<!-- ACTION BAR -->
-			<div class="inventory-actions">
-				<input type="text" placeholder="Buscar producto...">
-				<button class="btn add">+ Nuevo Producto</button>
-			</div>
+                        <!-- ACTION BAR -->
+                        <div class="inventory-actions">
+                                <input type="text" id="searchInput" placeholder="Buscar producto...">
+                                <button class="btn add" id="btnNuevoProducto">+ Nuevo Producto</button>
+                        </div>
 
-			<!-- SUMMARY CARDS -->
-			<div class="cards">
-				<div class="card yellow">
-					<p>Total Productos</p>
-					<h3>48</h3>
-				</div>
-				<div class="card blue">
-					<p>Categorías</p>
-					<h3>6</h3>
-				</div>
-				<div class="card orange">
-					<p>Stock Bajo</p>
-					<h3>5</h3>
-				</div>
-				<div class="card red">
-					<p>Sin Stock</p>
-					<h3>2</h3>
-				</div>
-			</div>
+                        <!-- SUMMARY CARDS -->
+                        <div class="cards">
+                                <div class="card yellow">
+                                        <p>Total Productos</p>
+                                        <h3 id="statTotalProductos">-</h3>
+                                </div>
+                                <div class="card blue">
+                                        <p>Categorías</p>
+                                        <h3 id="statCategorias">-</h3>
+                                </div>
+                                <div class="card orange">
+                                        <p>Stock Bajo</p>
+                                        <h3 id="statStockBajo">-</h3>
+                                </div>
+                                <div class="card red">
+                                        <p>Sin Stock</p>
+                                        <h3 id="statSinStock">-</h3>
+                                </div>
+                        </div>
 
-			<!-- INVENTORY TABLE -->
-			<div class="table">
-				<h3>Lista de Productos</h3>
-				<table>
-					<thead>
-						<tr>
-							<th>Producto</th>
-							<th>Categoría</th>
-							<th>Stock</th>
-							<th>Precio</th>
-							<th>Estado</th>
-							<th>Acciones</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>Pechuga de Pollo</td>
-							<td>Carnes</td>
-							<td>25</td>
-							<td>$120</td>
-							<td><span class="status done">Disponible</span></td>
-							<td>
-								<button class="btn small">Editar</button>
-							</td>
-						</tr>
-						<tr>
-							<td>Alitas</td>
-							<td>Carnes</td>
-							<td>5</td>
-							<td>$95</td>
-							<td><span class="status warning">Bajo</span></td>
-							<td>
-								<button class="btn small">Editar</button>
-							</td>
-						</tr>
-						<tr>
-							<td>Refresco</td>
-							<td>Bebidas</td>
-							<td>0</td>
-							<td>$25</td>
-							<td><span class="status pending">Sin stock</span></td>
-							<td>
-								<button class="btn small">Editar</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+                        <!-- INVENTORY TABLE -->
+                        <div class="table">
+                                <h3>Lista de Productos</h3>
+                                <div id="tableMessage" class="table-message"></div>
+                                <table id="inventoryTable">
+                                        <thead>
+                                                <tr>
+                                                        <th>Producto</th>
+                                                        <th>Categoría</th>
+                                                        <th>Stock</th>
+                                                        <th>Precio Venta</th>
+                                                        <th>Estado</th>
+                                                        <th>Acciones</th>
+                                                </tr>
+                                        </thead>
+                                        <tbody id="productTableBody">
+                                                <tr>
+                                                        <td colspan="6" style="text-align: center;">Cargando productos...</td>
+                                                </tr>
+                                        </tbody>
+                                </table>
+                        </div>
 
-		</main>
-	</div>
+                </main>
+        </div>
+
+        <!-- MODAL PARA AGREGAR/EDITAR PRODUCTO -->
+        <div id="modalProducto" class="modal" style="display: none;">
+                <div class="modal-content">
+                        <div class="modal-header">
+                                <h3 id="modalTitle">Nuevo Producto</h3>
+                                <span class="modal-close" id="btnCloseModal">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                                <form id="formProducto">
+                                        <input type="hidden" id="productId" value="">
+                                        
+                                        <div class="form-group">
+                                                <label for="productName">Nombre del Producto *</label>
+                                                <input type="text" id="productName" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                                <label for="productCategory">Categoría</label>
+                                                <select id="productCategory">
+                                                        <option value="">Sin categoría</option>
+                                                </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                                <label for="productUnit">Unidad</label>
+                                                <select id="productUnit">
+                                                        <option value="pieza">Pieza</option>
+                                                        <option value="orden">Orden</option>
+                                                        <option value="lata">Lata</option>
+                                                        <option value="botella">Botella</option>
+                                                        <option value="combo">Combo</option>
+                                                        <option value="porcion">Porción</option>
+                                                        <option value="rebanada">Rebanada</option>
+                                                        <option value="vaso">Vaso</option>
+                                                </select>
+                                        </div>
+
+                                        <div class="form-row">
+                                                <div class="form-group">
+                                                        <label for="productStock">Stock Inicial *</label>
+                                                        <input type="number" id="productStock" min="0" value="0" required>
+                                                </div>
+
+                                                <div class="form-group">
+                                                        <label for="productMinStock">Stock Mínimo</label>
+                                                        <input type="number" id="productMinStock" min="0" value="5">
+                                                </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                                <div class="form-group">
+                                                        <label for="productPriceVenta">Precio Venta *</label>
+                                                        <input type="number" id="productPriceVenta" step="0.01" min="0" required>
+                                                </div>
+
+                                                <div class="form-group">
+                                                        <label for="productPriceCompra">Precio Compra</label>
+                                                        <input type="number" id="productPriceCompra" step="0.01" min="0" value="0">
+                                                </div>
+                                        </div>
+
+                                        <div class="form-message" id="formMessage"></div>
+
+                                        <div class="form-actions">
+                                                <button type="button" class="btn btn-secondary" id="btnCancelForm">Cancelar</button>
+                                                <button type="submit" class="btn add" id="btnSubmitForm">Guardar</button>
+                                        </div>
+                                </form>
+                        </div>
+                </div>
+        </div>
+
+        <style>
+                /* Estilos para el modal */
+                .modal {
+                        position: fixed;
+                        z-index: 1000;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                }
+
+                .modal-content {
+                        background-color: white;
+                        border-radius: 8px;
+                        width: 90%;
+                        max-width: 600px;
+                        max-height: 90vh;
+                        overflow-y: auto;
+                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                }
+
+                .modal-header {
+                        padding: 20px;
+                        border-bottom: 1px solid #e0e0e0;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                }
+
+                .modal-header h3 {
+                        margin: 0;
+                        font-size: 1.5rem;
+                }
+
+                .modal-close {
+                        font-size: 28px;
+                        font-weight: bold;
+                        color: #999;
+                        cursor: pointer;
+                        line-height: 1;
+                }
+
+                .modal-close:hover {
+                        color: #333;
+                }
+
+                .modal-body {
+                        padding: 20px;
+                }
+
+                .form-group {
+                        margin-bottom: 16px;
+                }
+
+                .form-group label {
+                        display: block;
+                        margin-bottom: 6px;
+                        font-weight: 600;
+                        color: #333;
+                }
+
+                .form-group input,
+                .form-group select {
+                        width: 100%;
+                        padding: 10px;
+                        border: 1px solid #ddd;
+                        border-radius: 4px;
+                        font-size: 14px;
+                        box-sizing: border-box;
+                }
+
+                .form-group input:focus,
+                .form-group select:focus {
+                        outline: none;
+                        border-color: #ff6b35;
+                }
+
+                .form-row {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 16px;
+                }
+
+                .form-actions {
+                        display: flex;
+                        gap: 10px;
+                        justify-content: flex-end;
+                        margin-top: 20px;
+                        padding-top: 20px;
+                        border-top: 1px solid #e0e0e0;
+                }
+
+                .btn-secondary {
+                        background-color: #6c757d;
+                        color: white;
+                }
+
+                .btn-secondary:hover {
+                        background-color: #5a6268;
+                }
+
+                .form-message {
+                        padding: 10px;
+                        border-radius: 4px;
+                        margin-top: 10px;
+                        display: none;
+                }
+
+                .form-message.success {
+                        background-color: #d4edda;
+                        color: #155724;
+                        border: 1px solid #c3e6cb;
+                        display: block;
+                }
+
+                .form-message.error {
+                        background-color: #f8d7da;
+                        color: #721c24;
+                        border: 1px solid #f5c6cb;
+                        display: block;
+                }
+
+                .table-message {
+                        padding: 10px;
+                        margin-bottom: 10px;
+                        border-radius: 4px;
+                        display: none;
+                }
+
+                .table-message.error {
+                        background-color: #f8d7da;
+                        color: #721c24;
+                        border: 1px solid #f5c6cb;
+                        display: block;
+                }
+
+                .table-message.info {
+                        background-color: #d1ecf1;
+                        color: #0c5460;
+                        border: 1px solid #bee5eb;
+                        display: block;
+                }
+        </style>
+
+        <script>
+                // Estado global
+                let productos = [];
+                let categorias = [];
+                let editingProductId = null;
+
+                // Referencias a elementos
+                const $ = (id) => document.getElementById(id);
+                const els = {
+                        searchInput: $('searchInput'),
+                        tableBody: $('productTableBody'),
+                        tableMessage: $('tableMessage'),
+                        btnNuevo: $('btnNuevoProducto'),
+                        modal: $('modalProducto'),
+                        modalTitle: $('modalTitle'),
+                        btnCloseModal: $('btnCloseModal'),
+                        btnCancelForm: $('btnCancelForm'),
+                        form: $('formProducto'),
+                        formMessage: $('formMessage'),
+                        statTotalProductos: $('statTotalProductos'),
+                        statCategorias: $('statCategorias'),
+                        statStockBajo: $('statStockBajo'),
+                        statSinStock: $('statSinStock'),
+                };
+
+                // Utilidades
+                const money = (n) => n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                // Cargar estadísticas
+                async function loadStats() {
+                        try {
+                                const resp = await fetch('../api/inventario/stats.php', { credentials: 'same-origin' });
+                                if (resp.status === 401) {
+                                        window.location.href = 'index.html';
+                                        return;
+                                }
+                                const data = await resp.json();
+                                if (data.ok && data.stats) {
+                                        els.statTotalProductos.textContent = data.stats.total_productos;
+                                        els.statCategorias.textContent = data.stats.total_categorias;
+                                        els.statStockBajo.textContent = data.stats.stock_bajo;
+                                        els.statSinStock.textContent = data.stats.sin_stock;
+                                }
+                        } catch (err) {
+                                console.error('Error al cargar estadísticas:', err);
+                        }
+                }
+
+                // Cargar categorías
+                async function loadCategorias() {
+                        try {
+                                const resp = await fetch('../api/inventario/categorias.php', { credentials: 'same-origin' });
+                                if (resp.ok) {
+                                        const data = await resp.json();
+                                        if (data.ok && data.categorias) {
+                                                categorias = data.categorias;
+                                                renderCategoriasSelect();
+                                        }
+                                }
+                        } catch (err) {
+                                console.error('Error al cargar categorías:', err);
+                        }
+                }
+
+                // Renderizar select de categorías
+                function renderCategoriasSelect() {
+                        const select = $('productCategory');
+                        select.innerHTML = '<option value="">Sin categoría</option>';
+                        categorias.forEach(cat => {
+                                const option = document.createElement('option');
+                                option.value = cat.id;
+                                option.textContent = cat.nombre;
+                                select.appendChild(option);
+                        });
+                }
+
+                // Cargar productos
+                async function loadProductos(search = '') {
+                        els.tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Cargando productos...</td></tr>';
+                        els.tableMessage.style.display = 'none';
+                        
+                        try {
+                                const url = search 
+                                        ? `../api/inventario/list.php?search=${encodeURIComponent(search)}`
+                                        : '../api/inventario/list.php';
+                                
+                                const resp = await fetch(url, { credentials: 'same-origin' });
+                                
+                                if (resp.status === 401) {
+                                        window.location.href = 'index.html';
+                                        return;
+                                }
+                                
+                                const data = await resp.json();
+                                
+                                if (!resp.ok || !data.ok) {
+                                        const msg = data.error || 'Error al cargar productos';
+                                        els.tableMessage.textContent = msg;
+                                        els.tableMessage.className = 'table-message error';
+                                        els.tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No se pudieron cargar los productos</td></tr>';
+                                        return;
+                                }
+                                
+                                productos = data.productos;
+                                renderProductos();
+                                
+                        } catch (err) {
+                                console.error('Error:', err);
+                                els.tableMessage.textContent = 'Error de red al cargar productos';
+                                els.tableMessage.className = 'table-message error';
+                                els.tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Error de red</td></tr>';
+                        }
+                }
+
+                // Renderizar tabla de productos
+                function renderProductos() {
+                        if (productos.length === 0) {
+                                els.tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No hay productos para mostrar</td></tr>';
+                                return;
+                        }
+                        
+                        els.tableBody.innerHTML = productos.map(p => {
+                                let estadoClass = 'done';
+                                let estadoText = 'Disponible';
+                                
+                                if (p.estado === 'sin_stock') {
+                                        estadoClass = 'pending';
+                                        estadoText = 'Sin stock';
+                                } else if (p.estado === 'bajo') {
+                                        estadoClass = 'warning';
+                                        estadoText = 'Bajo';
+                                }
+                                
+                                return `
+                                        <tr>
+                                                <td>${p.nombre}</td>
+                                                <td>${p.categoria || '-'}</td>
+                                                <td>${p.stock}</td>
+                                                <td>$${money(p.precio_venta)}</td>
+                                                <td><span class="status ${estadoClass}">${estadoText}</span></td>
+                                                <td>
+                                                        <button class="btn small" onclick="editarProducto(${p.id})">Editar</button>
+                                                </td>
+                                        </tr>
+                                `;
+                        }).join('');
+                }
+
+                // Abrir modal para nuevo producto
+                function nuevoProducto() {
+                        editingProductId = null;
+                        els.modalTitle.textContent = 'Nuevo Producto';
+                        els.form.reset();
+                        $('productId').value = '';
+                        $('productMinStock').value = '5';
+                        $('productStock').value = '0';
+                        $('productPriceCompra').value = '0';
+                        els.formMessage.style.display = 'none';
+                        els.modal.style.display = 'flex';
+                }
+
+                // Editar producto
+                function editarProducto(id) {
+                        const producto = productos.find(p => p.id === id);
+                        if (!producto) return;
+                        
+                        editingProductId = id;
+                        els.modalTitle.textContent = 'Editar Producto';
+                        
+                        $('productId').value = producto.id;
+                        $('productName').value = producto.nombre;
+                        $('productCategory').value = producto.id_categoria || '';
+                        $('productUnit').value = producto.unidad || 'pieza';
+                        $('productStock').value = producto.stock;
+                        $('productMinStock').value = producto.cantidad_min;
+                        $('productPriceVenta').value = producto.precio_venta;
+                        $('productPriceCompra').value = producto.precio_compra;
+                        
+                        els.formMessage.style.display = 'none';
+                        els.modal.style.display = 'flex';
+                }
+
+                // Cerrar modal
+                function cerrarModal() {
+                        els.modal.style.display = 'none';
+                        editingProductId = null;
+                }
+
+                // Guardar producto
+                async function guardarProducto(e) {
+                        e.preventDefault();
+                        
+                        const data = {
+                                nombre: $('productName').value.trim(),
+                                id_categoria: parseInt($('productCategory').value) || 0,
+                                unidad: $('productUnit').value,
+                                stock: parseInt($('productStock').value) || 0,
+                                cantidad_min: parseInt($('productMinStock').value) || 5,
+                                precio_venta: parseFloat($('productPriceVenta').value) || 0,
+                                precio_compra: parseFloat($('productPriceCompra').value) || 0,
+                        };
+                        
+                        if (editingProductId) {
+                                data.id = editingProductId;
+                        }
+                        
+                        const url = editingProductId 
+                                ? '../api/inventario/update.php'
+                                : '../api/inventario/create.php';
+                        
+                        const btnSubmit = $('btnSubmitForm');
+                        btnSubmit.disabled = true;
+                        btnSubmit.textContent = 'Guardando...';
+                        
+                        try {
+                                const resp = await fetch(url, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify(data),
+                                        credentials: 'same-origin'
+                                });
+                                
+                                const result = await resp.json();
+                                
+                                if (!resp.ok || !result.ok) {
+                                        els.formMessage.textContent = result.error || 'Error al guardar producto';
+                                        els.formMessage.className = 'form-message error';
+                                        return;
+                                }
+                                
+                                els.formMessage.textContent = result.mensaje || 'Producto guardado exitosamente';
+                                els.formMessage.className = 'form-message success';
+                                
+                                setTimeout(() => {
+                                        cerrarModal();
+                                        loadProductos();
+                                        loadStats();
+                                }, 1000);
+                                
+                        } catch (err) {
+                                console.error('Error:', err);
+                                els.formMessage.textContent = 'Error de red al guardar producto';
+                                els.formMessage.className = 'form-message error';
+                        } finally {
+                                btnSubmit.disabled = false;
+                                btnSubmit.textContent = 'Guardar';
+                        }
+                }
+
+                // Event listeners
+                els.btnNuevo.addEventListener('click', nuevoProducto);
+                els.btnCloseModal.addEventListener('click', cerrarModal);
+                els.btnCancelForm.addEventListener('click', cerrarModal);
+                els.form.addEventListener('submit', guardarProducto);
+
+                // Búsqueda con debounce
+                let searchTimeout;
+                els.searchInput.addEventListener('input', (e) => {
+                        clearTimeout(searchTimeout);
+                        searchTimeout = setTimeout(() => {
+                                loadProductos(e.target.value);
+                        }, 300);
+                });
+
+                // Cerrar modal al hacer clic fuera
+                els.modal.addEventListener('click', (e) => {
+                        if (e.target === els.modal) {
+                                cerrarModal();
+                        }
+                });
+
+                // Inicialización
+                window.addEventListener('DOMContentLoaded', () => {
+                        loadStats();
+                        loadCategorias();
+                        loadProductos();
+                });
+
+                // Función global para editar (llamada desde los botones)
+                window.editarProducto = editarProducto;
+        </script>
 
 </body>
+
+</html>
