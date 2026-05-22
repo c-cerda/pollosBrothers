@@ -21,12 +21,10 @@
 		<aside class="sidebar">
 			<h3>Menú</h3>
 			<ul>
-				<li class="active">Dashboard</li>
-				<li>Pedidos</li>
-				<li>Ventas</li>
-				<li>Inventario</li>
-				<li class="config">Configuración</li>
-				<li class="logout">Cerrar Sesión</li>
+				<li><a href="../html/dashboard.html">Dashboard</a></li>
+				<li class=" active"><a href="../html/pedidos.html">Pedidos</a></li>
+				<li><a href="../html/inventario.html">Inventario</a> </li>
+				<li class="logout"><a href="../api/util/logout.php">Cerrar Sesión</a></li>
 			</ul>
 		</aside>
 
@@ -53,7 +51,8 @@
 			</div>
 
 			<div class="grid">
-				<div class="table" hx-get="../api/pedidos_recientes.php" hx-trigger="load" hx-swap="outerHTML">
+				<div class="table" hx-get="../api/pedidos_recientes.php" hx-trigger="load"
+					hx-swap="outerHTML">
 					<h3>Pedidos Recientes</h3>
 					<table>
 						<thead>
@@ -89,7 +88,7 @@
 			try {
 				const response = await fetch('../api/ventas_semana.php');
 				const data = await response.json();
-				
+
 				const ctx = document.getElementById('chartVentas').getContext('2d');
 				new Chart(ctx, {
 					type: 'bar',
@@ -110,7 +109,7 @@
 							y: {
 								beginAtZero: true,
 								ticks: {
-									callback: function(value) {
+									callback: function (value) {
 										return '$' + value.toFixed(2);
 									}
 								}
@@ -127,7 +126,7 @@
 				console.error('Error cargando gráfico de ventas:', error);
 			}
 		}
-		
+
 		// Cargar gráfico cuando la página esté lista
 		document.addEventListener('DOMContentLoaded', cargarGraficoVentas);
 	</script>
