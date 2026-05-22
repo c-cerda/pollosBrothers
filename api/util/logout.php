@@ -2,4 +2,4 @@
 session_start();
 $_SESSION = array();
 session_destroy();
-header("Location: /html/login.html");
+header("Location: /html/index.html");
