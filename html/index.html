@@ -12,20 +12,14 @@
 
 	<div class="login-box tablet">
 
-		<button type="button"
-				class="switch-btn"
-				id="switchBtn"
-				title="Cambiar modo de acceso"
-				aria-label="Cambiar modo de acceso">⚙</button>
+		<button type="button" class="switch-btn" id="switchBtn" title="Cambiar modo de acceso"
+			aria-label="Cambiar modo de acceso">⚙</button>
 
-		<h2 class="login-title">🐔 Pollos El Diferente</h2>
+		<h2 class="login-title"> Pollos El Diferente</h2>
 
 		<!-- PIN form (default) -->
-		<form id="pinForm"
-			  class="auth-form"
-			  hx-post="../api/login_pin.php"
-			  hx-target="#login-error"
-			  hx-swap="innerHTML">
+		<form id="pinForm" class="auth-form" hx-post="../api/login_pin.php" hx-target="#login-error"
+			hx-swap="innerHTML">
 
 			<input type="hidden" name="pin" id="realPin" value="" maxlength="6">
 			<div class="display" id="display">······</div>
@@ -52,25 +46,15 @@
 		</form>
 
 		<!-- Admin form (hidden by default) -->
-		<form id="adminForm"
-			  class="auth-form hidden"
-			  hx-post="../api/login_admin.php"
-			  hx-target="#login-error"
-			  hx-swap="innerHTML">
+		<form id="adminForm" class="auth-form hidden" hx-post="../api/login_admin.php" hx-target="#login-error"
+			hx-swap="innerHTML">
 
 			<h3 class="login-subtitle">Acceso administrador</h3>
 
-			<input type="text"
-				   name="usuario"
-				   placeholder="Usuario"
-				   autocomplete="username"
-				   required>
+			<input type="text" name="usuario" placeholder="Usuario" autocomplete="username" required>
 
-			<input type="password"
-				   name="password"
-				   placeholder="Contraseña"
-				   autocomplete="current-password"
-				   required>
+			<input type="password" name="password" placeholder="Contraseña" autocomplete="current-password"
+				required>
 
 			<button type="submit" class="btn add big">Entrar</button>
 		</form>
@@ -79,13 +63,13 @@
 	</div>
 
 	<script>
-		const pinForm   = document.getElementById('pinForm');
+		const pinForm = document.getElementById('pinForm');
 		const adminForm = document.getElementById('adminForm');
 		const switchBtn = document.getElementById('switchBtn');
-		const realPin   = document.getElementById('realPin');
-		const display   = document.getElementById('display');
-		const errorBox  = document.getElementById('login-error');
-		const keypad    = pinForm.querySelector('.keypad');
+		const realPin = document.getElementById('realPin');
+		const display = document.getElementById('display');
+		const errorBox = document.getElementById('login-error');
+		const keypad = pinForm.querySelector('.keypad');
 
 		function isPinMode() {
 			return !pinForm.classList.contains('hidden');
@@ -133,9 +117,9 @@
 		keypad.addEventListener('click', (e) => {
 			const btn = e.target.closest('button');
 			if (!btn) return;
-			if (btn.dataset.digit)               appendPin(btn.dataset.digit);
+			if (btn.dataset.digit) appendPin(btn.dataset.digit);
 			else if (btn.dataset.action === 'clear') clearPin();
-			else if (btn.dataset.action === 'back')  backPin();
+			else if (btn.dataset.action === 'back') backPin();
 			btn.blur();  // so Enter doesn't re-trigger the last-clicked digit
 		});
 

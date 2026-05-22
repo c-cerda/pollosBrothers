@@ -2,4 +2,4 @@
 session_start();
 $_SESSION = array();
 session_destroy();
-header("Location: /html/index.html");
+header("Location: /pbros/html/index.html");

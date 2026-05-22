@@ -67,8 +67,8 @@ $_SESSION['usuario'] = $cred['usuario'];
 $_SESSION['acceso'] = $cred['acceso'];
 
 $destino = match ($cred['acceso']) {
-	'cajero'   => '/html/caja.html',
-	'cocinero' => '/html/cocina.html',
+	'cajero'   => '/pbros/html/caja.html',
+	'cocinero' => '/pbros/html/cocina.html',
 };
 
 header('HX-Redirect: ' . $destino);
