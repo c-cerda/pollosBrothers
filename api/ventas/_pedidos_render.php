@@ -3,7 +3,8 @@
 // fragmento HTML para que las endpoints de list y marcar_listo devuelvan
 // exactamente lo mismo.
 
-function render_pedidos_pendientes(PDO $conn): string {
+function render_pedidos_pendientes(PDO $conn): string
+{
 	$sql = "SELECT v.id, v.fecha, v.cliente, v.estado,
 	               dv.cantidad, p.nombre AS producto_nombre
 	        FROM venta v
@@ -42,7 +43,7 @@ function render_pedidos_pendientes(PDO $conn): string {
 	foreach ($grouped as $v):
 		$id_str = str_pad((string)$v['id'], 3, '0', STR_PAD_LEFT);
 		$hora   = $v['fecha'] ? date('h:i A', strtotime($v['fecha'])) : '';
-	?>
+?>
 		<article class="pedido-card <?= htmlspecialchars($v['estado'], ENT_QUOTES, 'UTF-8') ?>">
 			<div class="pedido-head">
 				<span class="pedido-id">#<?= $id_str ?></span>
@@ -64,16 +65,16 @@ function render_pedidos_pendientes(PDO $conn): string {
 
 			<div class="pedido-actions">
 				<button type="button"
-						class="btn pedido-listo-btn"
-						hx-post="marcar_listo.php"
-						hx-vals='{"id": <?= $v['id'] ?>}'
-						hx-target="#pedidos"
-						hx-swap="innerHTML">
+					class="btn pedido-listo-btn"
+					hx-post="../api/ventas/marcar_listo.php"
+					hx-vals='{"id": <?= $v['id'] ?>}'
+					hx-target="#pedidos"
+					hx-swap="innerHTML">
 					Marcar como listo
 				</button>
 			</div>
 		</article>
-	<?php endforeach;
+<?php endforeach;
 
 	return ob_get_clean();
 }
