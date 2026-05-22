@@ -21,7 +21,6 @@
 		<aside class="sidebar">
 			<h3>Menú</h3>
 			<ul>
-				<li><a href="ventas.html">Ventas</a></li>
 				<li class="active">Caja</li>
 				<li class="logout"><a href="../api/util/logout.php">Cerrar Sesión</a></li>
 			</ul>
@@ -112,7 +111,7 @@
 		async function loadProducts() {
 			els.grid.innerHTML = '<p class="muted-msg">Cargando productos...</p>';
 			try {
-				const resp = await fetch('../api/productos/list.php', { credentials: 'same-origin' });
+				const resp = await fetch('../api/productos/list.php', {credentials: 'same-origin'});
 				if (resp.status === 401) {
 					window.location.href = 'index.html';
 					return;
