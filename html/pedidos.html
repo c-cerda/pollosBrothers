@@ -107,9 +107,10 @@
 		<aside class="sidebar">
 			<h3>Menú</h3>
 			<ul>
-				<li><a href="../html/dashboard.html">Dashboard</a></li>
-				<li class=" active"><a href="../html/pedidos.html">Pedidos</a></li>
-				<li><a href="../html/inventario.html">Inventario</a> </li>
+				<li><a href="dashboard.html">Dashboard</a></li>
+				<li class="active">Pedidos</li>
+				<li><a href="ventas.html">Ventas</a></li>
+				<li><a href="inventario.html">Inventario</a></li>
 				<li class="logout"><a href="../api/util/logout.php">Cerrar Sesión</a></li>
 			</ul>
 		</aside>
@@ -117,7 +118,6 @@
 		<main class="content">
 			<h2>Gestión de Pedidos</h2>
 
-			<!-- ACTION BAR -->
 			<div class="inventory-actions">
 				<div class="filter-row">
 					<input type="text" id="buscar" placeholder="Buscar cliente o ID...">
@@ -126,8 +126,6 @@
 						<option value="pendiente">Pendiente</option>
 						<option value="en_proceso">En proceso</option>
 						<option value="listo">Listo</option>
-						<option value="entregado">Entregado</option>
-						<option value="cancelado">Cancelado</option>
 					</select>
 					<input type="date" id="filtroFecha" title="Filtrar por fecha">
 					<button class="btn" id="btnRefresh" onclick="cargarPedidos()">↺
@@ -234,8 +232,8 @@
 			listo: 'ready', entregado: 'done', cancelado: 'cancelled'
 		};
 		const ESTADO_LABEL = {
-			pendiente: 'Pendiente', en_proceso: 'En proceso',
-			listo: 'Listo', entregado: 'Entregado', cancelado: 'Cancelado'
+			pendiente: 'pendiente', en_proceso: 'en proceso',
+			listo: 'listo', entregado: 'entregado', cancelado: 'cancelado'
 		};
 
 		// ─── Carga de catálogo ───────────────────────────────────
@@ -406,8 +404,8 @@
 	</script>
 
 </body>
-<<<<<<< HEAD </html>
-	=======
+
+
 
 </html>
->>>>>>> a3ab7fc0ffe4be0d2725ebec032c6214644679ee
+
