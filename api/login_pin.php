@@ -67,6 +67,8 @@ $_SESSION['id_empleado'] = (int)$cred['id_empleado'];
 $_SESSION['usuario'] = $cred['usuario'];
 $_SESSION['acceso'] = $cred['acceso'];
 
+var_dump($_SESSION);
+
 $destino = match ($cred['acceso']) {
 	'cajero'   => '/pollosBrothers/html/caja.html',
 	'cocinero' => '/pollosBrothers/html/cocina.html',

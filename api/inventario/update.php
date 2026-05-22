@@ -75,10 +75,21 @@ if ($precio_venta <= 0) {
 
 try {
     $conn->beginTransaction();
-    
+
+    // Verificar existencia del producto (rowCount() en UPDATE devuelve filas
+    // cambiadas, no coincidentes: si no cambia ningún campo daría falso 404).
+    $stmt = $conn->prepare("SELECT 1 FROM producto WHERE id = :id AND activo = 1");
+    $stmt->execute([':id' => $id]);
+    if (!$stmt->fetchColumn()) {
+        $conn->rollBack();
+        http_response_code(404);
+        echo json_encode(['ok' => false, 'error' => 'Producto no encontrado.']);
+        exit;
+    }
+
     // Actualizar producto
     $stmt = $conn->prepare("
-        UPDATE producto 
+        UPDATE producto
         SET id_categoria = :id_categoria,
             nombre = :nombre,
             unidad = :unidad,
@@ -86,7 +97,7 @@ try {
             precio_compra = :precio_compra
         WHERE id = :id AND activo = 1
     ");
-    
+
     $stmt->execute([
         ':id' => $id,
         ':id_categoria' => $id_categoria > 0 ? $id_categoria : null,
@@ -96,40 +107,22 @@ try {
         ':precio_compra' => $precio_compra
     ]);
     
-    if ($stmt->rowCount() === 0) {
-        $conn->rollBack();
-        http_response_code(404);
-        echo json_encode(['ok' => false, 'error' => 'Producto no encontrado.']);
-        exit;
-    }
-    
-    // Actualizar inventario
+    // Upsert de inventario en una sola consulta (evita el doble-paso
+    // UPDATE+INSERT que fallaba con duplicate key cuando los valores
+    // de stock no cambiaban).
     $stmt = $conn->prepare("
-        UPDATE inventario 
-        SET cantidad = :cantidad,
-            cantidad_min = :cantidad_min
-        WHERE id_producto = :id_producto
+        INSERT INTO inventario (id_producto, cantidad, cantidad_min)
+        VALUES (:id_producto, :cantidad, :cantidad_min)
+        ON DUPLICATE KEY UPDATE
+            cantidad = VALUES(cantidad),
+            cantidad_min = VALUES(cantidad_min)
     ");
-    
+
     $stmt->execute([
         ':id_producto' => $id,
         ':cantidad' => $stock,
         ':cantidad_min' => $cantidad_min
     ]);
-    
-    // Si no existe registro en inventario, insertarlo
-    if ($stmt->rowCount() === 0) {
-        $stmt = $conn->prepare("
-            INSERT INTO inventario (id_producto, cantidad, cantidad_min)
-            VALUES (:id_producto, :cantidad, :cantidad_min)
-        ");
-        
-        $stmt->execute([
-            ':id_producto' => $id,
-            ':cantidad' => $stock,
-            ':cantidad_min' => $cantidad_min
-        ]);
-    }
     
     $conn->commit();
     
