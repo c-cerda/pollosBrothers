@@ -1,0 +1,7 @@
+# Bloquea acceso HTTP directo a archivos de utilidad / credenciales.
+# Estos archivos solo deben ser incluidos por endpoints de PHP, nunca
+# servidos directamente al navegador.
+
+<FilesMatch "^(conec|conec_example)\.php$">
+    Require all denied
+</FilesMatch>

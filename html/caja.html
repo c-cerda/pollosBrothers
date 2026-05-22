@@ -12,7 +12,7 @@
 
 	<header class="topbar">
 		<div class="logo">🐔 Pollos El Diferente</div>
-		<div class="user">Administrador ⌄</div>
+		<div class="user">CAJA</div>
 	</header>
 
 	<div class="container">
@@ -21,84 +21,301 @@
 		<aside class="sidebar">
 			<h3>Menú</h3>
 			<ul>
-				<li>Dashboard</li>
-				<li>Pedidos</li>
-				<li>Ventas</li>
-				<li>Inventario</li>
+				<li><a href="ventas.html">Ventas</a></li>
 				<li class="active">Caja</li>
-				<li class="config">Configuración</li>
-				<li class="logout">Cerrar Sesión</li>
+				<li class="logout"><a href="../api/util/logout.php">Cerrar Sesión</a></li>
 			</ul>
 		</aside>
 
 		<!-- MAIN -->
-		<main class="content caja-layout">
+		<main class="content caja-content">
 
-			<!-- LEFT: PRODUCTS -->
-			<div class="productos">
-				<h2>Seleccionar Productos</h2>
+			<nav class="caja-tabs" id="cajaTabs">
+				<button type="button" class="tab active" data-tab="productos">Productos</button>
+				<button type="button" class="tab" data-tab="ticket">
+					Ticket <span class="tab-badge" id="ticketBadge" hidden></span>
+				</button>
+				<button type="button" class="tab" data-tab="estado">Estado</button>
+			</nav>
 
-				<input type="text" placeholder="Buscar producto...">
+			<section class="caja-panel active" id="panel-productos">
+				<input type="text" id="searchProducts" class="search-input"
+					placeholder="Buscar producto...">
+				<div class="product-grid" id="productGrid"></div>
+			</section>
 
-				<div class="product-grid">
-					<div class="product-card">
-						<div class="product-info">
-							<h4>Pechuga</h4>
-							<p>$120</p>
-						</div>
-						<button class="btn add-btn">+</button>
-					</div>
-
-					<div class="product-card">
-						<div class="product-info">
-							<h4>Pechuga</h4>
-							<p>$120</p>
-						</div>
-						<button class="btn add-btn">+</button>
-					</div>
-
-					<div class="product-card">
-						<div class="product-info">
-							<h4>Pechuga</h4>
-							<p>$120</p>
-						</div>
-						<button class="btn add-btn">+</button>
-					</div>
-				</div>
-			</div>
-
-			<!-- RIGHT: CART -->
-			<div class="ticket">
+			<section class="caja-panel" id="panel-ticket">
 				<h2>Ticket</h2>
 
-				<div class="ticket-items">
-					<div class="item">
-						<span>Pechuga x2</span>
-						<span>$240</span>
-						<button class="remove">✕</button>
-					</div>
+				<div class="ticket-items" id="ticketItems"></div>
+				<p class="ticket-empty" id="ticketEmpty">El ticket está vacío.</p>
 
-					<div class="item">
-						<span>Pechuga x2</span>
-						<span>$240</span>
-						<button class="remove">✕</button>
-					</div>
-				</div>
-
-				<div class="total">
-					<h3>Total: $265</h3>
+				<div class="total" id="ticketTotal" hidden>
+					<h3>Total: $<span id="totalAmount">0</span></h3>
 				</div>
 
 				<div class="payment">
-					<button class="btn">Efectivo</button>
-					<button class="btn">Tarjeta</button>
-					<button class="btn add">Cobrar</button>
+					<button type="button" class="btn payment-option"
+						data-method="efectivo">Efectivo</button>
+					<button type="button" class="btn payment-option"
+						data-method="tarjeta">Tarjeta</button>
+					<button type="button" class="btn add" id="cobrarBtn">Cobrar</button>
 				</div>
 
-			</div>
+				<div class="ticket-msg" id="ticketMsg"></div>
+			</section>
+
+			<section class="caja-panel" id="panel-estado">
+				<h2>Pedidos del día</h2>
+				<p class="orders-empty" id="ordersEmpty">No hay pedidos aún.</p>
+				<div class="orders-list" id="ordersList"></div>
+			</section>
 
 		</main>
 	</div>
+
+	<script>
+		let products = [];
+
+		const cart = new Map();
+		const orders = [];
+		let payment = null;
+
+		const $ = (id) => document.getElementById(id);
+		const els = {
+			grid: $('productGrid'), search: $('searchProducts'),
+			items: $('ticketItems'), empty: $('ticketEmpty'),
+			total: $('ticketTotal'), amount: $('totalAmount'),
+			badge: $('ticketBadge'), msg: $('ticketMsg'),
+			orders: $('ordersList'), ordersEmpty: $('ordersEmpty'),
+			tabs: $('cajaTabs'),
+		};
+
+		const money = (n) => n.toLocaleString('es-MX', {maximumFractionDigits: 2});
+
+		function renderProducts() {
+			const q = els.search.value.toLowerCase().trim();
+			const visible = products.filter(p => p.nombre.toLowerCase().includes(q));
+			els.grid.innerHTML = visible.length === 0
+				? '<p class="muted-msg">Sin resultados.</p>'
+				: visible.map(p => `
+					<div class="product-card">
+						<div class="product-info">
+							<h4>${p.nombre}</h4>
+							<p>$${money(p.precio)}</p>
+						</div>
+						<button type="button" class="btn add-btn" data-add="${p.id}">+</button>
+					</div>
+				`).join('');
+		}
+
+		async function loadProducts() {
+			els.grid.innerHTML = '<p class="muted-msg">Cargando productos...</p>';
+			try {
+				const resp = await fetch('../api/productos/list.php', { credentials: 'same-origin' });
+				if (resp.status === 401) {
+					window.location.href = 'index.html';
+					return;
+				}
+				const data = await resp.json().catch(() => null);
+				if (!resp.ok || !data || !data.ok) {
+					const msg = (data && data.error) ? data.error : `Error (${resp.status}).`;
+					els.grid.innerHTML = `<p class="muted-msg">No se pudieron cargar los productos: ${msg}</p>`;
+					return;
+				}
+				products = data.productos;
+				renderProducts();
+			} catch (err) {
+				els.grid.innerHTML = '<p class="muted-msg">Error de red al cargar productos.</p>';
+			}
+		}
+
+		function cartTotal() {
+			let t = 0;
+			for (const {product, cantidad} of cart.values()) t += product.precio * cantidad;
+			return t;
+		}
+
+		function cartCount() {
+			let n = 0;
+			for (const {cantidad} of cart.values()) n += cantidad;
+			return n;
+		}
+
+		function renderCart() {
+			const entries = [...cart.values()];
+			els.empty.hidden = entries.length > 0;
+			els.total.hidden = entries.length === 0;
+			els.items.innerHTML = entries.map(({product, cantidad}) => `
+				<div class="item">
+					<span>${product.nombre} ×${cantidad}</span>
+					<span>$${money(product.precio * cantidad)}</span>
+					<button type="button" class="remove" data-remove="${product.id}">✕</button>
+				</div>
+			`).join('');
+			els.amount.textContent = money(cartTotal());
+
+			const n = cartCount();
+			els.badge.textContent = n;
+			els.badge.hidden = n === 0;
+		}
+
+		function flashBadge() {
+			els.badge.classList.remove('pulse');
+			void els.badge.offsetWidth;
+			els.badge.classList.add('pulse');
+		}
+
+		function clearMsg() {
+			els.msg.textContent = '';
+			els.msg.className = 'ticket-msg';
+		}
+
+		function showMsg(text, kind = 'error') {
+			els.msg.textContent = text;
+			els.msg.className = `ticket-msg ${kind}`;
+		}
+
+		function addToCart(id) {
+			const product = products.find(p => p.id === id);
+			if (!product) return;
+			const existing = cart.get(id);
+			if (existing) existing.cantidad += 1;
+			else cart.set(id, {product, cantidad: 1});
+			renderCart();
+			flashBadge();
+			clearMsg();
+		}
+
+		function removeFromCart(id) {
+			cart.delete(id);
+			renderCart();
+		}
+
+		function setPayment(method) {
+			payment = method;
+			for (const b of document.querySelectorAll('.payment-option')) {
+				b.classList.toggle('selected', b.dataset.method === method);
+			}
+			clearMsg();
+		}
+
+		function renderOrders() {
+			els.ordersEmpty.hidden = orders.length > 0;
+			els.orders.innerHTML = [...orders].reverse().map(o => `
+				<div class="order-row">
+					<div class="order-row-head">
+						<span class="order-num">#${String(o.id).padStart(3, '0')}</span>
+						<span class="status ${o.estadoClass}">${o.estado}</span>
+					</div>
+					<div class="order-row-body">
+						${o.items.map(i => `${i.cantidad}× ${i.nombre}`).join(', ')}
+					</div>
+					<div class="order-row-foot">
+						<span>${o.payment}</span>
+						<span>$${money(o.total)}</span>
+					</div>
+				</div>
+			`).join('');
+		}
+
+		async function cobrar() {
+			if (cart.size === 0) return showMsg('El ticket está vacío.');
+			if (!payment) return showMsg('Selecciona un método de pago.');
+
+			const cobrarBtn = $('cobrarBtn');
+			cobrarBtn.disabled = true;
+			cobrarBtn.textContent = 'Procesando...';
+
+			try {
+				const payload = {
+					metodo_pago: payment,
+					items: [...cart.values()].map(({product, cantidad}) => ({
+						id_producto: product.id,
+						cantidad,
+					})),
+				};
+
+				const resp = await fetch('../api/ventas/create.php', {
+					method: 'POST',
+					headers: {'Content-Type': 'application/json'},
+					body: JSON.stringify(payload),
+					credentials: 'same-origin',
+				});
+
+				const data = await resp.json().catch(() => null);
+
+				if (!resp.ok || !data || !data.ok) {
+					const msg = (data && data.error) ? data.error : `Error del servidor (${resp.status}).`;
+					showMsg(msg);
+					return;
+				}
+
+				const items_local = [...cart.values()].map(({product, cantidad}) => ({
+					nombre: product.nombre, cantidad, precio: product.precio,
+				}));
+
+				orders.push({
+					id: data.id,
+					items: items_local,
+					total: data.total ?? cartTotal(),
+					payment: payment === 'efectivo' ? 'Efectivo' : 'Tarjeta',
+					estado: 'Pendiente', estadoClass: 'pending',
+					createdAt: new Date(),
+				});
+
+				cart.clear();
+				payment = null;
+				for (const b of document.querySelectorAll('.payment-option')) b.classList.remove('selected');
+				renderCart();
+				renderOrders();
+				showMsg('Pedido creado.', 'success');
+				setTimeout(() => switchTab('estado'), 500);
+
+			} catch (err) {
+				showMsg('Error de red. Inténtalo de nuevo.');
+			} finally {
+				cobrarBtn.disabled = false;
+				cobrarBtn.textContent = 'Cobrar';
+			}
+		}
+
+		function switchTab(id) {
+			for (const t of document.querySelectorAll('.tab')) {
+				t.classList.toggle('active', t.dataset.tab === id);
+			}
+			for (const p of document.querySelectorAll('.caja-panel')) {
+				p.classList.toggle('active', p.id === `panel-${id}`);
+			}
+		}
+
+		els.tabs.addEventListener('click', (e) => {
+			const t = e.target.closest('.tab');
+			if (t) switchTab(t.dataset.tab);
+		});
+
+		els.grid.addEventListener('click', (e) => {
+			const b = e.target.closest('[data-add]');
+			if (b) addToCart(+b.dataset.add);
+		});
+
+		els.items.addEventListener('click', (e) => {
+			const b = e.target.closest('[data-remove]');
+			if (b) removeFromCart(+b.dataset.remove);
+		});
+
+		els.search.addEventListener('input', renderProducts);
+
+		for (const btn of document.querySelectorAll('.payment-option')) {
+			btn.addEventListener('click', () => setPayment(btn.dataset.method));
+		}
+
+		$('cobrarBtn').addEventListener('click', cobrar);
+
+		loadProducts();
+		renderCart();
+		renderOrders();
+	</script>
 
 </body>
 

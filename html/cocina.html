@@ -3,73 +3,26 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Cocina - Pedidos</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Cocina - Pollos</title>
 	<link rel="stylesheet" href="../styles/style.css">
-	<script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+	<script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 
 <body class="kitchen-body">
 
-	<div class="kitchen-container">
+	<header class="kitchen-header">
+		<h1>🍗 Cocina</h1>
+		<a class="kitchen-logout" href="../api/util/logout.php">Salir</a>
+	</header>
 
-		<!-- CURRENT ORDER -->
-		<section class="current-order">
-			<h1>Pedido Actual</h1>
-
-			<div class="order-card active">
-				<div class="order-header">
-					<span class="order-id">#001</span>
-					<span class="order-time">12:45 PM</span>
-				</div>
-
-				<div class="order-items">
-					<p>🍗 2x Pechuga</p>
-					<p>🍗 1x Alitas</p>
-					<p>🥤 2x Refrescos</p>
-				</div>
-
-				<div class="order-notes">
-					⚠️ Sin salsa picante, extra tortillas
-				</div>
-
-				<button class="btn add big">Marcar como listo</button>
-			</div>
-		</section>
-
-		<!-- NEXT ORDERS -->
-		<section class="next-orders">
-			<h2>Siguientes</h2>
-
-			<div class="order-card">
-				<div class="order-header">
-					<span>#002</span>
-					<span>12:50 PM</span>
-				</div>
-				<p>🍗 3x Alitas</p>
-				<small>Sin cebolla</small>
-			</div>
-
-			<div class="order-card">
-				<div class="order-header">
-					<span>#003</span>
-					<span>12:55 PM</span>
-				</div>
-				<p>🍗 1x Combo Familiar</p>
-				<small>-</small>
-			</div>
-
-			<div class="order-card">
-				<div class="order-header">
-					<span>#004</span>
-					<span>1:00 PM</span>
-				</div>
-				<p>🍗 2x Pechuga</p>
-				<small>Extra salsa</small>
-			</div>
-
-		</section>
-
-	</div>
+	<main id="pedidos"
+		  class="pedidos-list"
+		  hx-get="../api/ventas/list.php"
+		  hx-trigger="load, every 5s"
+		  hx-swap="innerHTML">
+		<p class="pedidos-empty">Cargando...</p>
+	</main>
 
 </body>
 

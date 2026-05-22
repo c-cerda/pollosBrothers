@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Pollos El Diferente — Acceso</title>
+	<link rel="stylesheet" href="../styles/style.css">
+	<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+
+<body class="login-body">
+
+	<div class="login-box tablet">
+
+		<button type="button" class="switch-btn" id="switchBtn" title="Cambiar modo de acceso"
+			aria-label="Cambiar modo de acceso">⚙</button>
+
+		<h2 class="login-title"> Pollos El Diferente</h2>
+
+		<!-- PIN form (default) -->
+		<form id="pinForm" class="auth-form" hx-post="../api/login_pin.php" hx-target="#login-error"
+			hx-swap="innerHTML">
+
+			<input type="hidden" name="pin" id="realPin" value="" maxlength="6">
+			<div class="display" id="display">······</div>
+
+			<div class="keypad">
+				<button type="button" data-digit="1">1</button>
+				<button type="button" data-digit="2">2</button>
+				<button type="button" data-digit="3">3</button>
+
+				<button type="button" data-digit="4">4</button>
+				<button type="button" data-digit="5">5</button>
+				<button type="button" data-digit="6">6</button>
+
+				<button type="button" data-digit="7">7</button>
+				<button type="button" data-digit="8">8</button>
+				<button type="button" data-digit="9">9</button>
+
+				<button type="button" class="clear" data-action="clear">C</button>
+				<button type="button" data-digit="0">0</button>
+				<button type="button" class="back" data-action="back">←</button>
+			</div>
+
+			<button type="submit" class="btn add big">Entrar</button>
+		</form>
+
+		<!-- Admin form (hidden by default) -->
+		<form id="adminForm" class="auth-form hidden" hx-post="../api/login_admin.php" hx-target="#login-error"
+			hx-swap="innerHTML">
+
+			<h3 class="login-subtitle">Acceso administrador</h3>
+
+			<input type="text" name="usuario" placeholder="Usuario" autocomplete="username" required>
+
+			<input type="password" name="password" placeholder="Contraseña" autocomplete="current-password"
+				required>
+
+			<button type="submit" class="btn add big">Entrar</button>
+		</form>
+
+		<div id="login-error" class="error"></div>
+	</div>
+
+	<script>
+		const pinForm = document.getElementById('pinForm');
+		const adminForm = document.getElementById('adminForm');
+		const switchBtn = document.getElementById('switchBtn');
+		const realPin = document.getElementById('realPin');
+		const display = document.getElementById('display');
+		const errorBox = document.getElementById('login-error');
+		const keypad = pinForm.querySelector('.keypad');
+
+		function isPinMode() {
+			return !pinForm.classList.contains('hidden');
+		}
+
+		function refreshDisplay() {
+			const n = realPin.value.length;
+			display.textContent = '•'.repeat(n) + '·'.repeat(6 - n);
+		}
+
+		function clearError() {
+			errorBox.textContent = '';
+		}
+
+		function appendPin(d) {
+			if (realPin.value.length >= 6) return;
+			realPin.value += d;
+			refreshDisplay();
+			clearError();
+		}
+
+		function backPin() {
+			realPin.value = realPin.value.slice(0, -1);
+			refreshDisplay();
+			clearError();
+		}
+
+		function clearPin() {
+			realPin.value = '';
+			refreshDisplay();
+			clearError();
+		}
+
+		function toggleMode() {
+			pinForm.classList.toggle('hidden');
+			adminForm.classList.toggle('hidden');
+			clearPin();
+			adminForm.reset();
+			clearError();
+			if (!isPinMode()) {
+				adminForm.querySelector('input[name="usuario"]').focus();
+			}
+		}
+
+		keypad.addEventListener('click', (e) => {
+			const btn = e.target.closest('button');
+			if (!btn) return;
+			if (btn.dataset.digit) appendPin(btn.dataset.digit);
+			else if (btn.dataset.action === 'clear') clearPin();
+			else if (btn.dataset.action === 'back') backPin();
+			btn.blur();  // so Enter doesn't re-trigger the last-clicked digit
+		});
+
+		switchBtn.addEventListener('click', toggleMode);
+
+		document.addEventListener('keydown', (e) => {
+			if (!isPinMode()) return;
+			if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+			if (e.key >= '0' && e.key <= '9') {
+				appendPin(e.key);
+				e.preventDefault();
+			} else if (e.key === 'Backspace') {
+				backPin();
+				e.preventDefault();
+			} else if (e.key === 'Escape') {
+				clearPin();
+				e.preventDefault();
+			} else if (e.key === 'Enter') {
+				if (realPin.value.length === 6) pinForm.requestSubmit();
+				e.preventDefault();
+			}
+		});
+
+		refreshDisplay();
+	</script>
+
+</body>
+
+</html>

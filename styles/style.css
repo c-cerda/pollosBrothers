@@ -9,6 +9,11 @@ body {
 	background: #f5f5f5;
 }
 
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
 /* TOPBAR */
 .topbar {
 	background: #ff2d2d;
@@ -53,6 +58,10 @@ body {
 	margin: 8px 0;
 	border-radius: 8px;
 	cursor: pointer;
+}
+
+.sidebar li a {
+	display: block;
 }
 
 .sidebar li.active {
@@ -245,6 +254,47 @@ td {
 	border-radius: 12px;
 	text-align: center;
 	width: 300px;
+	position: relative;
+}
+
+.login-title {
+	margin-bottom: 15px;
+	font-size: 18px;
+}
+
+.login-subtitle {
+	margin-bottom: 10px;
+	font-size: 16px;
+}
+
+/* MODE SWITCH BUTTON */
+.switch-btn {
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	border: none;
+	background: #f0f0f0;
+	color: #777;
+	cursor: pointer;
+	font-size: 18px;
+	line-height: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 0.15s, color 0.15s, transform 0.4s;
+}
+
+.switch-btn:hover {
+	background: #e2e2e2;
+	color: #111;
+	transform: rotate(60deg);
+}
+
+.hidden {
+	display: none;
 }
 
 .login-box input {
@@ -512,37 +562,222 @@ td {
 	transform: scale(0.97);
 }
 
+/* =========================
+   CAJA — TABS LAYOUT
+========================= */
+
+.caja-content {
+	height: calc(100vh - 60px);
+	display: flex;
+	flex-direction: column;
+}
+
+.caja-tabs {
+	display: flex;
+	border-bottom: 2px solid #eee;
+	margin-bottom: 20px;
+	flex-shrink: 0;
+}
+
+.caja-tabs .tab {
+	background: none;
+	border: none;
+	padding: 12px 24px;
+	cursor: pointer;
+	font-size: 15px;
+	color: #777;
+	border-bottom: 3px solid transparent;
+	margin-bottom: -2px;
+	transition: color 0.15s, border-color 0.15s;
+}
+
+.caja-tabs .tab:hover {
+	color: #333;
+}
+
+.caja-tabs .tab.active {
+	color: #ff3c3c;
+	border-bottom-color: #ff3c3c;
+	font-weight: 600;
+}
+
+.tab-badge {
+	display: inline-block;
+	background: #ff3c3c;
+	color: white;
+	font-size: 11px;
+	border-radius: 10px;
+	padding: 2px 7px;
+	margin-left: 6px;
+	font-weight: 600;
+	line-height: 1;
+	min-width: 18px;
+	text-align: center;
+}
+
+.tab-badge[hidden] { display: none; }
+
+@keyframes pulseBadge {
+	0%   { transform: scale(1);   }
+	50%  { transform: scale(1.4); }
+	100% { transform: scale(1);   }
+}
+
+.tab-badge.pulse {
+	animation: pulseBadge 0.3s ease-out;
+}
+
+.caja-panel {
+	display: none;
+	flex: 1;
+	overflow-y: auto;
+	padding-right: 4px;
+}
+
+.caja-panel.active {
+	display: block;
+}
+
+.search-input {
+	width: 100%;
+	padding: 12px;
+	margin-bottom: 15px;
+	border-radius: 10px;
+	border: 1px solid #ddd;
+	background: #fafafa;
+	outline: none;
+	font-size: 14px;
+}
+
+#panel-productos .product-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 15px;
+}
+
+#panel-ticket h2,
+#panel-estado h2 {
+	margin-bottom: 15px;
+}
+
+.ticket-empty,
+.orders-empty {
+	text-align: center;
+	color: #999;
+	padding: 60px 20px;
+	background: #fafafa;
+	border-radius: 12px;
+	margin: 15px 0;
+}
+
+.ticket-empty[hidden],
+.orders-empty[hidden],
+.total[hidden] {
+	display: none;
+}
+
+.payment-option.selected {
+	background: #2b6cb0;
+	box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.25);
+}
+
+.ticket-msg {
+	margin-top: 12px;
+	padding: 10px;
+	border-radius: 8px;
+	text-align: center;
+	font-size: 14px;
+}
+
+.ticket-msg:empty { display: none; }
+
+.ticket-msg.error {
+	background: #fdecea;
+	color: #c0392b;
+}
+
+.ticket-msg.success {
+	background: #e6f6e9;
+	color: #2e7d32;
+}
+
+.muted-msg {
+	text-align: center;
+	color: #999;
+	padding: 30px;
+}
+
+.orders-list {
+	max-width: 720px;
+}
+
+.order-row {
+	background: white;
+	border-radius: 12px;
+	padding: 14px 18px;
+	margin-bottom: 10px;
+	border-left: 4px solid #ccc;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.order-row-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 6px;
+}
+
+.order-num {
+	font-weight: 700;
+	font-size: 17px;
+}
+
+.order-row-body {
+	font-size: 14px;
+	color: #555;
+	margin-bottom: 6px;
+}
+
+.order-row-foot {
+	display: flex;
+	justify-content: space-between;
+	font-size: 13px;
+	color: #888;
+}
+
 /* TABLET LOGIN */
 .login-box.tablet {
-	width: 320px;
+	width: 360px;
 }
 
 /* DISPLAY */
 .display {
 	background: #111;
 	color: #FFB33F;
-	font-size: 28px;
-	padding: 15px;
-	border-radius: 10px;
+	font-size: 36px;
+	padding: 18px;
+	border-radius: 12px;
 	margin: 15px 0;
-	letter-spacing: 5px;
+	letter-spacing: 10px;
 	text-align: center;
+	font-variant-numeric: tabular-nums;
 }
 
 /* KEYPAD GRID */
 .keypad {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	gap: 10px;
+	gap: 12px;
 }
 
 /* KEYS */
 .keypad button {
-	padding: 18px;
-	font-size: 20px;
+	padding: 22px 0;
+	font-size: 28px;
+	font-weight: 600;
 	border: none;
-	border-radius: 10px;
-	background: #f0f0f0;
+	border-radius: 12px;
+	background: #f3f3f3;
 	cursor: pointer;
 	transition: 0.1s;
 }
@@ -571,47 +806,3 @@ td {
 	font-size: 18px;
 }
 
-/* LOGIN — EMPLOYEE PICKER */
-.employee-grid {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 10px;
-	margin-top: 15px;
-}
-
-.employee-tile {
-	background: #f0f0f0;
-	border: none;
-	border-radius: 10px;
-	padding: 14px 10px;
-	cursor: pointer;
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-	transition: 0.15s;
-}
-
-.employee-tile:hover {
-	background: #e2e2e2;
-}
-
-.employee-tile .name {
-	font-weight: bold;
-	font-size: 15px;
-}
-
-.employee-tile .role {
-	font-size: 11px;
-	color: #666;
-	text-transform: uppercase;
-}
-
-.password-input {
-	font-size: 18px;
-	letter-spacing: 2px;
-}
-
-.muted {
-	color: #888;
-	font-size: 14px;
-}
